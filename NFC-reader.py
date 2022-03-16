@@ -1,6 +1,4 @@
 import nfc
-from time import sleep
-from nfc.clf import RemoteTarget
 import winsound
 
 clf = nfc.ContactlessFrontend()
@@ -35,11 +33,6 @@ def getData():
         return(None)
     
 
-    
-    
-    
-
-
 while True:
     try:
         if data == None:    
@@ -55,4 +48,3 @@ while True:
         print("Exception catched - Closing device")
         clf.close()  #Test over - New connection will be needed
         break
-
