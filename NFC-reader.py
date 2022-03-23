@@ -20,8 +20,7 @@ def getData():
     print(tag)
         
     if not tag.ndef == None:
-        winsound.Beep(frequency=2000, duration=250) #Beep-sound (Make this on the nfc-reader if possible)
-        print(tag.dump())
+        winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
         for record in tag.ndef.records:
             print(record)
         return(tag.ndef.records)
