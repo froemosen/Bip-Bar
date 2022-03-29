@@ -44,6 +44,6 @@ while True:
         
     except Exception as errorCode:
         print(errorCode)
-        print("Exception catched - Closing device")
+        print("Exception cought - Closing device")
         clf.close()  #Test over - New connection will be needed
         break
