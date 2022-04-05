@@ -1,3 +1,4 @@
+#Testprogram til NFC-reader. Brugt i Main.py
 import nfc
 import winsound
 
