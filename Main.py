@@ -1,10 +1,10 @@
-from datetime import date
 import tkinter as tk
-from tkcalendar import Calendar, DateEntry #pip install tkcalendar
 import sys
 import os
 from time import gmtime, strftime
 import entryWithPlaceholder
+import cv2
+import PIL.Image, PIL.ImageTk
 
 
 class MainFrame(tk.Frame): 
@@ -57,6 +57,90 @@ class page(tk.Frame):
     def show(self):
         self.lift()
         
+    def userInfo(self):
+        navnText = tk.Label(self, text = "Fuldt navn")
+        self.navnInput = tk.Entry(self)
+
+        emailText = tk.Label(self, text = "E-mail adresse")
+        self.emailInput = tk.Entry(self)
+        
+        adresseText = tk.Label(self, text = "Adresse")
+        self.adresseInput = tk.Entry(self)
+
+        birthdayText = tk.Label(self, text = "Fødselsdato")        
+        self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
+        self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (1-12)")
+        self.year = entryWithPlaceholder.EntryWithPlaceholder(self, f"år")
+        
+        billedeText = tk.Label(self, text = "Billede til identifikation")        
+        self.btn_billede = tk.Button(self, text = "Tag billede", command=self.toggleLiveView)
+         
+        
+        
+        navnText.grid(row = 1, column = 0, padx = 0, pady = 0)
+        self.navnInput.grid(row = 2, column = 0, padx = 5, pady = 5)
+        
+        emailText.grid(row = 3, column = 0, padx = 30, pady = 5,)
+        self.emailInput.grid(row = 4, column = 0, padx = 5, pady = 5)
+        
+        adresseText.grid(row = 5, column = 0, padx = 5, pady = 5)
+        self.adresseInput.grid(row = 6, column = 0, padx = 5, pady = 5)
+        
+        birthdayText.grid(row = 7, column = 0, padx = 5, pady = 5)
+        self.date.grid(row = 8, column = 0, padx = 5, pady = 5)
+        self.month.grid(row = 9, column = 0, padx = 5, pady = 5)
+        self.year.grid(row = 10, column = 0, padx = 5, pady = 5)
+          
+        billedeText.grid(row = 11, column = 0, padx = 5, pady = 5)
+        self.btn_billede.grid(row = 12, column = 0, padx = 30, pady = 5)
+        
+        
+         # ---------------------------------------------------------
+        # CAMERA SETUP STARTS HERE
+        # ---------------------------------------------------------
+
+        self.vcap = cv2.VideoCapture(0)
+        self.width = 300
+        self.height = 300
+    
+        #Canvas
+        self.canvas1 = tk.Canvas(self)
+        self.canvas1.configure( width= self.width, height=self.height)
+        self.canvas1.grid(column= 0, row=20,padx = 10, pady=10)
+        
+        
+        #Start-image
+        self.takeImage()
+        
+        # ---------------------------------------------------------
+        # CAMERA SETUP ENDs HERE
+        # ---------------------------------------------------------
+    
+    def toggleLiveView(self):
+        if self.liveView == False:
+            self.liveView = True
+            self.takeImage()
+            self.btn_billede.config(text = "Tag billede")
+        else: 
+            self.liveView = False
+            self.btn_billede.config(text = "Nyt billede")
+            
+    def takeImage(self): #Triggers image capture       
+        if self.liveView:
+            _, frame = self.vcap.read()
+
+            frame1 = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame1))
+            
+            
+            self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER)
+
+            self.after(15, self.takeImage)
+            
+        else:
+            pass
+        
           
         
 class Bip_Bar(page):
@@ -84,47 +168,21 @@ class Edit_User(page):
         self.btn_getUser = tk.Button(self, text = "Hent chip", command = self.getUser, width=50, height=10, activebackground="green yellow")
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
         
+        #LiveView Boolean
+        self.liveView = False
+        
     def getUser(self): #Private and public data
         data = nfcReader.readData()
         print(data)
-        
         self.btn_getUser.destroy()
+        #data = ServerCommunication.getUser_private()
         
-        navnText = tk.Label(self, text = "Fuldt navn")
-        self.navnInput = tk.Entry(self)
-
-        emailText = tk.Label(self, text = "E-mail adresse")
-        self.emailInput = tk.Entry(self)
+        #Creates boxes for input
+        self.userInfo()
+        self.btn_billede.config(text="Nyt billede")
         
-        adresseText = tk.Label(self, text = "Adresse")
-        self.adresseInput = tk.Entry(self)
- 
-        birthdayText = tk.Label(self, text = "Fødselsdato")
-        self.birthdayInput = tk.Entry(self)
-        
-        billedeText = tk.Label(self, text = "Billede til identifikation")
-        self.billedeInput = tk.Entry(self)
-        
-        btn_update = tk.Button(self, text = "Opdater bruger", command=self.updateUser)
-        
-         
-        
-        navnText.grid(row = 1, column = 0, padx = 30, pady = 5)
-        self.navnInput.grid(row = 2, column = 0, padx = 5, pady = 5)
-        
-        emailText.grid(row = 3, column = 0, padx = 30, pady = 5,)
-        self.emailInput.grid(row = 4, column = 0, padx = 5, pady = 5)
-        
-        adresseText.grid(row = 5, column = 0, padx = 5, pady = 5)
-        self.adresseInput.grid(row = 6, column = 0, padx = 5, pady = 5)
-        
-        birthdayText.grid(row = 7, column = 0, padx = 5, pady = 5)
-        self.birthdayInput.grid(row = 8, column = 0, padx = 5, pady = 5)
-        
-        billedeText.grid(row = 9, column = 0, padx = 5, pady = 5)
-        self.billedeInput.grid(row = 10, column = 0, padx = 5, pady = 5)
-        
-        btn_update.grid(row = 11, column = 0, padx = 30, pady = 5)   
+        #INSERT data INTO userInfo() BOXES
+          
     
     def updateUser(self):
         pass
@@ -132,50 +190,23 @@ class Edit_User(page):
 class New_User(page):
     def __init__(self, *args, **kwargs):
         page.__init__(self, *args, **kwargs)
+        
         newUserText = tk.Label(self, text = "Register New User", width=20, font="FreeMono")
-        
-        navnText = tk.Label(self, text = "Fuldt navn")
-        self.navnInput = tk.Entry(self)
-
-        emailText = tk.Label(self, text = "E-mail adresse")
-        self.emailInput = tk.Entry(self)
-        
-        adresseText = tk.Label(self, text = "Adresse")
-        self.adresseInput = tk.Entry(self)
-
-        birthdayText = tk.Label(self, text = "Fødselsdato")        
-        self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
-        self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (1-12)")
-        self.year = entryWithPlaceholder.EntryWithPlaceholder(self, f"år")
-        
-        billedeText = tk.Label(self, text = "Billede til identifikation")        
-        btn_billede = tk.Button(self, text = "Tag billede", command=self.takeImage)
-         
         newUserText.grid(row = 0, column = 0, padx = 0, pady = 0)
         
-        navnText.grid(row = 1, column = 0, padx = 0, pady = 0)
-        self.navnInput.grid(row = 2, column = 0, padx = 5, pady = 5)
+        #LiveView Boolean
+        self.liveView = True
         
-        emailText.grid(row = 3, column = 0, padx = 30, pady = 5,)
-        self.emailInput.grid(row = 4, column = 0, padx = 5, pady = 5)
-        
-        adresseText.grid(row = 5, column = 0, padx = 5, pady = 5)
-        self.adresseInput.grid(row = 6, column = 0, padx = 5, pady = 5)
-        
-        birthdayText.grid(row = 7, column = 0, padx = 5, pady = 5)
-        self.date.grid(row = 8, column = 0, padx = 5, pady = 5)
-        self.month.grid(row = 9, column = 0, padx = 5, pady = 5)
-        self.year.grid(row = 10, column = 0, padx = 5, pady = 5)
+        #Creates boxes for input
+        self.userInfo()
           
-        billedeText.grid(row = 11, column = 0, padx = 5, pady = 5)
-        btn_billede.grid(row = 12, column = 0, padx = 30, pady = 5)  
          
             
     def newUser(self): #Private and public data
         pass
     
-    def takeImage(self): #Triggers image capture, and saves image to user.
-        pass
+
+        
         
 
 class NFC_Reader():
@@ -236,5 +267,5 @@ if __name__ == "__main__":
     base.title("Bip Bar")
     main = MainFrame(base)
     main.pack(side = "top", fill = "both", expand = False)
-    base.wm_geometry("1200x650") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
+    base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
     base.mainloop() 
