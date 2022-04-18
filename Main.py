@@ -1,10 +1,10 @@
 import tkinter as tk
 import sys
 import os
-from time import gmtime, strftime
 import entryWithPlaceholder
 import cv2
 import PIL.Image, PIL.ImageTk
+from cryptography.fernet import Fernet
 
 
 class MainFrame(tk.Frame): 
@@ -47,8 +47,7 @@ class MainFrame(tk.Frame):
         Bip_Bar_Window.show()
     
     def reset(self):
-        os.execl(sys.executable, sys.executable, *sys.argv) 
-        
+        os.execl(sys.executable, sys.executable, *sys.argv)      
 
 class page(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -140,8 +139,7 @@ class page(tk.Frame):
             
         else:
             pass
-        
-          
+               
         
 class Bip_Bar(page):
     def __init__(self, *args, **kwargs):
@@ -182,7 +180,6 @@ class Edit_User(page):
         self.btn_billede.config(text="Nyt billede")
         
         #INSERT data INTO userInfo() BOXES
-          
     
     def updateUser(self):
         pass
@@ -204,14 +201,11 @@ class New_User(page):
             
     def newUser(self): #Private and public data
         pass
-    
-
-        
-        
 
 class NFC_Reader():
     def __init__(self):
         import nfc
+                
         self.clf = nfc.ContactlessFrontend()
         
     
@@ -242,7 +236,16 @@ class NFC_Reader():
             return(None)
     
     def writeData(self):
-        pass
+        #GENERATION OF KEY FOR CHIP
+        key = Fernet.generate_key()
+        fernetKey = Fernet(key)
+        
+        token = fernetKey.encrypt(b"my deep dark secret")
+        print(b"my deep dark secret")
+        print(token)
+        
+        msg = token.decrypt(token)
+        print(msg)
     
 class ServerCommunication():
     def __init__(self):

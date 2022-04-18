@@ -4,7 +4,7 @@ from unittest import skip
 
 #navn = incomiing fra terminal(bruger id)
 db = {}
-sk = #data fra terminal
+sk = "" #data fra terminal
 
 def storeData():
     # database
