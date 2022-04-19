@@ -4,8 +4,8 @@ import os
 import entryWithPlaceholder
 import cv2
 import PIL.Image, PIL.ImageTk
-from cryptography.fernet import Fernet
-
+import uuid
+import ndef
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -68,7 +68,7 @@ class page(tk.Frame):
 
         birthdayText = tk.Label(self, text = "Fødselsdato")        
         self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
-        self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (1-12)")
+        self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (01-12)")
         self.year = entryWithPlaceholder.EntryWithPlaceholder(self, f"år")
         
         billedeText = tk.Label(self, text = "Billede til identifikation")        
@@ -105,7 +105,7 @@ class page(tk.Frame):
         #Canvas
         self.canvas1 = tk.Canvas(self)
         self.canvas1.configure( width= self.width, height=self.height)
-        self.canvas1.grid(column= 0, row=20,padx = 10, pady=10)
+        self.canvas1.grid(column= 0, row=13,padx = 10, pady=10)
         
         
         #Start-image
@@ -126,12 +126,11 @@ class page(tk.Frame):
             
     def takeImage(self): #Triggers image capture       
         if self.liveView:
-            _, frame = self.vcap.read()
+            _, self.frame = self.vcap.read()
+            
+            self.frame1 = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
-            frame1 = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            
-            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(frame1))
-            
+            self.photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(self.frame1))
             
             self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER)
 
@@ -196,11 +195,33 @@ class New_User(page):
         
         #Creates boxes for input
         self.userInfo()
+        
+        newUserButton = tk.Button(self, text = "Opret ny bruger", command = self.newUser)
+        newUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)
           
-         
+        
             
     def newUser(self): #Private and public data
-        pass
+        #GENERATION OF USERID
+        UserID = str(uuid.uuid1())
+        
+        nfcReader.writeData(UserID)
+        #___________________________________
+        #WRITE UserID TO NFC-CHIP AND SECURE
+        #___________________________________     
+        cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) 
+        
+            
+        
+        #userData = (str(UserID), str(self.navnInput.get()), str(self.emailInput.get()), str(self.adresseInput.get()), str(self.date.get()+"-"+self.month.get()+"-"+self.year.get()), imageText)
+        
+        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg"))
+            
+        self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER)
+        
+        #___________________________________
+        #SEND DATA TO SERVER
+        #___________________________________
 
 class NFC_Reader():
     def __init__(self):
@@ -222,7 +243,8 @@ class NFC_Reader():
         tag = self.clf.connect(rdwr={'on-connect': lambda tag: False})
         print("Tag found!")
         print(tag)
-            
+        tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3")
+        
         if not tag.ndef == None:
             for record in tag.ndef.records:
                 print(record)
@@ -235,17 +257,29 @@ class NFC_Reader():
             self.clf.close()
             return(None)
     
-    def writeData(self):
-        #GENERATION OF KEY FOR CHIP
-        key = Fernet.generate_key()
-        fernetKey = Fernet(key)
+    def writeData(self, inputData):
+        #Check NFC-reader connection
+        try:
+            assert self.clf.open('usb') is True #Determened in cmd by command: "python -m nfc"
+            print(f"Using device: {self.clf}")
+
+        except AssertionError:
+            print("NFC-reader not set up correctly. Try again! (Maybe the error is in the code!)")
+            self.clf.close()  #Test over - New connection will be needed
+            
+        tag = self.clf.connect(rdwr={'on-connect': lambda tag: False})
+        tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3") #Tries to unlock chip, if it was already locked by us.
+        print("Tag found!")
+        print(tag)
+
+        tag.ndef.records = [ndef.SmartposterRecord(inputData)]
+        tag.protect(password = b"203ec79c-9288-4612-bac3-9e827d43c5d3", read_protect = True)
         
-        token = fernetKey.encrypt(b"my deep dark secret")
-        print(b"my deep dark secret")
-        print(token)
+        self.clf.close()
+            
         
-        msg = token.decrypt(token)
-        print(msg)
+                
+        
     
 class ServerCommunication():
     def __init__(self):
