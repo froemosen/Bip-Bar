@@ -1,3 +1,4 @@
+#Testprogram til NFC-reader. Brugt i Main.py
 import nfc
 import winsound
 
@@ -17,6 +18,7 @@ except AssertionError:
 
 def getData():
     tag = clf.connect(rdwr={'on-connect': lambda tag: False})
+    print("Tag found!")
     print(tag)
         
     if not tag.ndef == None:
@@ -28,7 +30,6 @@ def getData():
     else: 
         print(tag.dump())
         print("Card Carries No Data!\n")
-        #MayHaps tag.sector_select(???)
         return(None)
     
 
