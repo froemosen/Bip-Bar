@@ -27,8 +27,8 @@ def NewUser(data):
     incomming.split(",",7)
         
 
-    dbu = {incomming([0]) : {name : incomming([1]) , emailaddres : incomming([2]), adress : incomming([3]), birthday : incomming([4]), 
-    bal : incomming([5]), Chip : incomming([6]), Trans : {incomming([7])} } }
+    dbu = {incomming([0]) : {"name" : incomming([1]) , "emailAddress" : incomming([2]), "address" : incomming([3]), "birthday" : incomming([4]), 
+    "balance" : incomming([5]), "chipID" : incomming([6]), "transactions" : {incomming([7])} } }
     dbfile.update(dbu)
       
     # Its important to use binary mode
@@ -50,7 +50,7 @@ def CreateTransaction(data):
     incom.split(",", 3)
     
     dbfile = open('dbbb', 'ab')
-    userid = incum([0])
+    userid = incom([0])
     
     dbfile.update(userid(Transid(incom([1])),value(incom([2])),desc(incom([3]))))
     

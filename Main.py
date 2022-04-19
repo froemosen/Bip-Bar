@@ -203,21 +203,19 @@ class New_User(page):
             
     def newUser(self): #Private and public data
         #GENERATION OF USERID
-        UserID = str(uuid.uuid1())
+        UserID = str(uuid.uuid1()) #Generate User ID
+
+        nfcReader.writeData(UserID) #WRITE UserID TO NFC-CHIP AND SECURE
+   
+        cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) #Save image of user for identification
         
-        nfcReader.writeData(UserID)
-        #___________________________________
-        #WRITE UserID TO NFC-CHIP AND SECURE
-        #___________________________________     
-        cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) 
+        #Get userdata and format in order to send to server
+        userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
+        print(userData)
         
-            
         
-        #userData = (str(UserID), str(self.navnInput.get()), str(self.emailInput.get()), str(self.adresseInput.get()), str(self.date.get()+"-"+self.month.get()+"-"+self.year.get()), imageText)
-        
-        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg"))
-            
-        self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER)
+        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg")) #Image to ImageTK object
+        self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
         #___________________________________
         #SEND DATA TO SERVER
@@ -226,8 +224,8 @@ class New_User(page):
 class NFC_Reader():
     def __init__(self):
         import nfc
-                
-        self.clf = nfc.ContactlessFrontend()
+            
+        self.clf = nfc.ContactlessFrontend() #NFC-reader object
         
     
     def readData(self):
@@ -245,8 +243,8 @@ class NFC_Reader():
         print(tag)
         tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3")
         
-        if not tag.ndef == None:
-            for record in tag.ndef.records:
+        if not tag.ndef == None: #If tag carries data
+            for record in tag.ndef.records:  #Print all records
                 print(record)
             self.clf.close()
             return(tag.ndef.records)
@@ -256,6 +254,7 @@ class NFC_Reader():
             print("Card Carries No Data!\n")
             self.clf.close()
             return(None)
+    
     
     def writeData(self, inputData):
         #Check NFC-reader connection
@@ -276,9 +275,6 @@ class NFC_Reader():
         tag.protect(password = b"203ec79c-9288-4612-bac3-9e827d43c5d3", read_protect = True)
         
         self.clf.close()
-            
-        
-                
         
     
 class ServerCommunication():
