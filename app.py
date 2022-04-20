@@ -10,13 +10,22 @@ socketio = SocketIO(app)
 
 db = {}
 
-@socketio.on('Data') 
-def SendData():
+@socketio.on('PublicData') 
+def SendDataPublic():
     dbfile = open('dbbb', 'ab')
     user = {dbfile[0]}
     pickle.dump(db, dbfile)                     
     dbfile.close()
     emit(user)
+
+socketio.on("PrivteData")
+def SendDataPrivite():
+    dbfile = open('dbbb', 'ab')
+    user = {dbfile[0]}
+    pickle.dump(db, dbfile)                     
+    dbfile.close()
+    emit(user)
+
 
 @socketio.on("NewUser")
 def NewUser(data):
@@ -59,7 +68,5 @@ def CreateTransaction(data):
     dbfile.close()
 
 
-if __name__ == '__main__':
-    NewUser()
-    CreateTransaction()
-    SendData()
+if __name__ == '__main__':    
+    app.run()
