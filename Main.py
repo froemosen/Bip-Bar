@@ -1,3 +1,4 @@
+from re import S
 import tkinter as tk
 import sys
 import os
@@ -179,7 +180,8 @@ class Edit_User(page):
         self.userInfo()
         self.btn_billede.config(text="Nyt billede")
         
-        serverComm.getUser_private()
+        serverComm.getUser_public("hej")
+        print("WELL FUCK SHIT SAKSDKASDKA")
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
     
@@ -286,11 +288,13 @@ class ServerCommunication():
     
     def getUser_private(self, userID):
         sio.emit("PrivateData", userID)
-        sio.emit("GetBillede", userID)
+        #sio.emit("GetBillede", userID)
     
     def getUser_public(self, userID):
-        sio.emit("PublicData", userID)
-        sio.emit("GetBillede", userID)
+        print("SHIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        sio.emit("PublicData")
+        print("FUCK")
+        #sio.emit("GetBillede", userID)
     
     def updateUser(self, userData, image):
         sio.emit("NewUser", userData)

@@ -53,10 +53,7 @@ def Billede(data):
     directory = "IDPhotos"
     data.save(directory)
     
-@socketio.on("GetBillede")
-def GetBillede(data): #CHANGE THIS BS
-    directory = "IDPhotos"
-    data.save(directory)
+
 
 
 
