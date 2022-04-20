@@ -305,12 +305,9 @@ if __name__ == "__main__":
     main = MainFrame(base)
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
-    base.mainloop() 
     
     #Setup of socketio
     sio = socketio.Client()
-    
-    sio.connect('http://localhost:5000') #Connect to server
     
     @sio.event
     def connect():
@@ -323,4 +320,15 @@ if __name__ == "__main__":
     @sio.event
     def disconnect():
         print("I'm disconnected!")
+    
+    sio.connect('http://127.0.0.1:5000') #Connect to server
+    
+    
+
         
+    
+    
+    base.mainloop() 
+    
+
+
