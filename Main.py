@@ -170,8 +170,8 @@ class Edit_User(page):
         self.liveView = False
         
     def getUser(self): #Private and public data
-        data = nfcReader.readData()
-        print(data)
+        #data = nfcReader.readData()
+        #print(data)
         self.btn_getUser.destroy()
         #data = ServerCommunication.getUser_private()
         

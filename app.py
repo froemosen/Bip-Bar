@@ -12,6 +12,7 @@ db = {"Simon" : "Sej"}
 
 @socketio.on('PublicData') 
 def SendDataPublic():
+    print("I HAVE RECIEVED THE 'PublicData' REQUEST")
     dbfile = open('dbbb', 'ab')
     user = {dbfile[0]}
     emit(user)
