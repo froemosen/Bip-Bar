@@ -18,7 +18,7 @@ def SendDataPublic():
     dbfile.close()
     emit(user)
 
-socketio.on("PrivteData")
+socketio.on("PrivateData")
 def SendDataPrivite():
     dbfile = open('dbbb', 'ab')
     user = {dbfile[0]}
@@ -50,6 +50,11 @@ def NewUser(data):
 def Billede(data):
     directory = "IDPhotos"
     data.save(directory)
+    
+@socketio.on("GetBillede")
+def Billede(data):
+    directory = "IDPhotos"
+    data.save(directory)
 
 
 
@@ -66,6 +71,13 @@ def CreateTransaction(data):
     
     pickle.dump(db, dbfile)                     
     dbfile.close()
+    
+    #sio.emit("TransOK", "Transaction revieved")
+    
+    """
+    except:
+        sio.emit("TransOK", "Transaction Failed!")
+    """
 
 
 if __name__ == '__main__':    

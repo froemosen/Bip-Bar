@@ -6,6 +6,7 @@ import cv2
 import PIL.Image, PIL.ImageTk
 import uuid
 import ndef
+import socketio
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -277,21 +278,24 @@ class NFC_Reader():
         self.clf.close()
         
     
-class ServerCommunication():
+class ServerCommunication(socketio.ClientNamespace):
     def __init__(self):
-        pass
+        global sio
     
-    def getUser_private(self):
-        pass
+    def getUser_private(self, userID):
+        sio.emit("PrivateData", userID)
+        sio.emit("GetBillede", userID)
     
-    def getUser_public(self):
-        pass
+    def getUser_public(self, userID):
+        sio.emit("PublicData", userID)
+        sio.emit("GetBillede", userID)
     
-    def updateUser(self):
-        pass
+    def updateUser(self, userData, image):
+        sio.emit("NewUser", userData)
+        sio.emit("Billede", image)
     
-    def createTransaction(self):
-        pass
+    def createTransaction(self, transInfo):
+        sio.emit("Trans", transInfo)
 
 if __name__ == "__main__":
     nfcReader = NFC_Reader()
@@ -302,3 +306,21 @@ if __name__ == "__main__":
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
     base.mainloop() 
+    
+    #Setup of socketio
+    sio = socketio.Client()
+    
+    sio.connect('http://localhost:5000') #Connect to server
+    
+    @sio.event
+    def connect():
+        print("I'm connected!")
+
+    @sio.event
+    def connect_error(data):
+        print("The connection failed!\n", str(data))
+
+    @sio.event
+    def disconnect():
+        print("I'm disconnected!")
+        
