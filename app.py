@@ -32,15 +32,9 @@ def SendDataPrivite():
 @socketio.on("NewUser")
 def NewUser(data):
     # database
-    dbfile = open('dbbb', 'ab')
-    
-    incomming = data
-    incomming.split(",",7)
-        
-
-    dbu = {incomming([0]) : {"name" : incomming([1]) , "emailAddress" : incomming([2]), "address" : incomming([3]), "birthday" : incomming([4]), 
-    "balance" : incomming([5]), "chipID" : incomming([6]), "transactions" : {incomming([7])} } }
-    dbfile.update(dbu)
+    dbfile = open('dbbb', 'ab')   
+    dbUser = data
+    dbfile.update(dbUser)
       
     # Its important to use binary mode
 

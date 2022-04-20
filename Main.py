@@ -1,13 +1,12 @@
-from re import S
-import tkinter as tk
+import tkinter as tk # (pip install tkinter)
 import sys
 import os
-import entryWithPlaceholder
-import cv2
-import PIL.Image, PIL.ImageTk
-import uuid
-import ndef
-import socketio
+import entryWithPlaceholder #entryWithPlaceholder.py (local file)
+import cv2 #Camera stuff (pip install opencv)
+import PIL.Image, PIL.ImageTk #tkinter stuff with PIL (pip install Pillow)
+import uuid #Random uuid-generation
+import ndef # (pip install ndefpy)? - might be included in (pip install nfc)?
+import socketio # (pip install "python-socketio[client]")
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -180,8 +179,7 @@ class Edit_User(page):
         self.userInfo()
         self.btn_billede.config(text="Nyt billede")
         
-        serverComm.getUser_public("hej")
-        print("WELL FUCK SHIT SAKSDKASDKA")
+        serverComm.getUser_private()
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
     
@@ -210,21 +208,33 @@ class New_User(page):
         #GENERATION OF USERID
         UserID = str(uuid.uuid1()) #Generate User ID
 
-        nfcReader.writeData(UserID) #WRITE UserID TO NFC-CHIP AND SECURE
+        ID = nfcReader.writeData(UserID) #WRITE UserID TO NFC-CHIP AND SECURE
    
         cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) #Save image of user for identification
         
         #Get userdata and format in order to send to server
-        userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
+        #userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
+        userData = {UserID : {"name" : str(self.navnInput.get()),
+                              "email" : str(self.emailInput.get()),
+                              "adress" : str(self.adresseInput.get()),
+                              "birthday" : str(self.date.get()+'-'+self.month.get()+'-'+self.year.get()),
+                              "chipID" : ID,
+                              "balance" : 0,
+                              "transactions" : {}
+                              }} 
         print(userData)
-        
         
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg")) #Image to ImageTK object
         self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
-        #___________________________________
-        #SEND DATA TO SERVER
-        #___________________________________
+        #Load image again to send in right format
+        with open(f'IDPhotos/{UserID}.jpg', 'rb') as f:
+            image_data = f.read()
+            
+        #Send UserData and Image to Server
+        serverComm.updateUser(userData, image_data)
+            
+        
 
 class NFC_Reader():
     def __init__(self):
@@ -246,7 +256,9 @@ class NFC_Reader():
         tag = self.clf.connect(rdwr={'on-connect': lambda tag: False})
         print("Tag found!")
         print(tag)
-        tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3")
+        
+        if tag.ndef == None: #If tag is authenticated or carries no data.
+            tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3")
         
         if not tag.ndef == None: #If tag carries data
             for record in tag.ndef.records:  #Print all records
@@ -275,11 +287,16 @@ class NFC_Reader():
         tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3") #Tries to unlock chip, if it was already locked by us.
         print("Tag found!")
         print(tag)
+        
+        chipID = tag.identifier.hex()
+        print("unique chip id:", chipID)
 
         tag.ndef.records = [ndef.SmartposterRecord(inputData)]
         tag.protect(password = b"203ec79c-9288-4612-bac3-9e827d43c5d3", read_protect = True)
         
         self.clf.close()
+        
+        return chipID
         
     
 class ServerCommunication():
@@ -288,13 +305,11 @@ class ServerCommunication():
     
     def getUser_private(self, userID):
         sio.emit("PrivateData", userID)
-        #sio.emit("GetBillede", userID)
+        sio.emit("GetBillede", userID)
     
     def getUser_public(self, userID):
-        print("SHIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        sio.emit("PublicData")
-        print("FUCK")
-        #sio.emit("GetBillede", userID)
+        sio.emit("PublicData", userID)
+        sio.emit("GetBillede", userID)
     
     def updateUser(self, userData, image):
         sio.emit("NewUser", userData)
@@ -311,6 +326,9 @@ if __name__ == "__main__":
     main = MainFrame(base)
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
+    
+    
+    #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
     
     #Setup of socketio
     sio = socketio.Client()
@@ -330,7 +348,7 @@ if __name__ == "__main__":
     sio.connect('http://127.0.0.1:5000') #Connect to server
     
     
-    base.mainloop() 
+    base.mainloop() #TKINTER MAIN LOOP
     
 
 

@@ -20,6 +20,8 @@ def getData():
     tag = clf.connect(rdwr={'on-connect': lambda tag: False})
     print("Tag found!")
     print(tag)
+    
+    print(tag.identifier)
         
     if not tag.ndef == None:
         winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
