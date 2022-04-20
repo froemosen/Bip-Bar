@@ -8,15 +8,16 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-db = {}
+db = {"Simon" : "Sej"}
 
 @socketio.on('PublicData') 
 def SendDataPublic():
     dbfile = open('dbbb', 'ab')
     user = {dbfile[0]}
+    emit(user)
     pickle.dump(db, dbfile)                     
     dbfile.close()
-    emit(user)
+    
 
 socketio.on("PrivateData")
 def SendDataPrivite():
@@ -52,7 +53,7 @@ def Billede(data):
     data.save(directory)
     
 @socketio.on("GetBillede")
-def Billede(data):
+def GetBillede(data): #CHANGE THIS BS
     directory = "IDPhotos"
     data.save(directory)
 

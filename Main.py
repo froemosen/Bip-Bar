@@ -179,6 +179,8 @@ class Edit_User(page):
         self.userInfo()
         self.btn_billede.config(text="Nyt billede")
         
+        serverComm.getUser_private()
+        #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
     
     def updateUser(self):
@@ -278,7 +280,7 @@ class NFC_Reader():
         self.clf.close()
         
     
-class ServerCommunication(socketio.ClientNamespace):
+class ServerCommunication():
     def __init__(self):
         global sio
     
@@ -322,10 +324,6 @@ if __name__ == "__main__":
         print("I'm disconnected!")
     
     sio.connect('http://127.0.0.1:5000') #Connect to server
-    
-    
-
-        
     
     
     base.mainloop() 
