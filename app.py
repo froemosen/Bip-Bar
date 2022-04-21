@@ -25,14 +25,12 @@ def SendDataPrivate(data):
     user = (dbfile[data[0]])
     print(user)
     
-    userID = data.keys()[0]
-    
-    with open(f'ServerPhotos/{userID}.jpg', 'rb') as f:
+    with open(f'ServerPhotos/{data[0]}.jpg', 'rb') as f:
         image = f.read()
     
     if user["chipID"] == data[1]:
         emit("recievePrivateData", user, image)  
-    else: emit("recievePrivateData", {'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}})
+    else: emit("recievePrivateData", {'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None)
 
 
 @socketio.on("NewUser")
