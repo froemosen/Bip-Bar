@@ -192,6 +192,8 @@ class Edit_User(page):
         print("Awaiting data...")
         
         global privateUserData
+        global userImage
+        
         while privateUserData == {}:
             time.sleep(0.2)
         
@@ -206,9 +208,16 @@ class Edit_User(page):
         dateList = privateUserData["birthday"].split("-")
         self.date.insert(0, dateList[0])
         self.month.insert(0, dateList[1])
-        self.year.insert(0, dateList[2])     
+        self.year.insert(0, dateList[2])    
+        
+        with open(f"currentImage.jpg", "wb") as binary_file:
+            binary_file.write(userImage) # Write bytes to file 
+        
+        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
+        self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
         privateUserData = {}
+        userImage = None
         
             
     def updateUser(self):
@@ -341,7 +350,7 @@ class ServerCommunication():
         print("Making private user data request...")
         data = [userID, chipID]
         sio.emit("PrivateData", data)
-        #sio.emit("GetBillede", userID)
+        sio.emit("GetBillede", userID)
     
     def getUser_public(self, userID, chipID):
         print("Making public user data request...")
@@ -367,6 +376,7 @@ if __name__ == "__main__":
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
 
     privateUserData = {}
+    userImage = None
     
     #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
     
@@ -386,10 +396,13 @@ if __name__ == "__main__":
         print("I'm disconnected!")
         
     @sio.on("recievePrivateData")
-    def recievePrivateData(data):
+    def recievePrivateData(data, image):
         print("PRIVATE DATA RECIEVED!")
         global privateUserData
+        global userImage
+        userImage = image
         privateUserData = data
+                
         print(data)
         #main.New_User_Window.insertUser(data)
         
