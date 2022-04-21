@@ -75,9 +75,9 @@ class page(tk.Frame):
             self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (01-12)")
             self.year = entryWithPlaceholder.EntryWithPlaceholder(self, "år")
         else:
-            self.date = tk.Entry(self, "dag")
-            self.month = tk.Entry(self, "månedstal (01-12)")
-            self.year = tk.Entry(self, "år")
+            self.date = tk.Entry(self, text ="dag")
+            self.month = tk.Entry(self, text ="månedstal (01-12)")
+            self.year = tk.Entry(self, text = "år")
         
         billedeText = tk.Label(self, text = "Billede til identifikation")        
         self.btn_billede = tk.Button(self, text = "Tag billede", command=self.toggleLiveView)
