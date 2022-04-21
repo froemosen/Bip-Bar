@@ -479,9 +479,9 @@ if __name__ == "__main__":
     serverComm = ServerCommunication()
     base = tk.Tk()
     base.title("Bip Bar")
+    base.state('zoomed') #Laver windowed fullscreen
     main = MainFrame(base)
     main.pack(side = "top", fill = "both", expand = True)
-    base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
 
     userData = {}
     userImage = None
@@ -516,7 +516,7 @@ if __name__ == "__main__":
         
     #print("Connecting to server... please wait up to 60 seconds")
     #sio.connect('https://froemosen.pythonanywhere.com', wait_timeout = 60) #Connect to server
-    sio.connect('http://127.0.0.1/' ) #Connect to local server
+    sio.connect('http://127.0.0.1:5000/' ) #Connect to local server
     
     
     base.mainloop() #TKINTER MAIN LOOP
