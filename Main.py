@@ -59,7 +59,7 @@ class page(tk.Frame):
     def show(self):
         self.lift()
         
-    def userInfo(self):
+    def userInfo(self, placeholder):
         navnText = tk.Label(self, text = "Fuldt navn")
         self.navnInput = tk.Entry(self)
 
@@ -69,10 +69,15 @@ class page(tk.Frame):
         adresseText = tk.Label(self, text = "Adresse")
         self.adresseInput = tk.Entry(self)
 
-        birthdayText = tk.Label(self, text = "Fødselsdato")        
-        self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
-        self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (01-12)")
-        self.year = entryWithPlaceholder.EntryWithPlaceholder(self, f"år")
+        birthdayText = tk.Label(self, text = "Fødselsdato")     
+        if placeholder == True:   
+            self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
+            self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (01-12)")
+            self.year = entryWithPlaceholder.EntryWithPlaceholder(self, "år")
+        else:
+            self.date = tk.Entry(self, "dag")
+            self.month = tk.Entry(self, "månedstal (01-12)")
+            self.year = tk.Entry(self, "år")
         
         billedeText = tk.Label(self, text = "Billede til identifikation")        
         self.btn_billede = tk.Button(self, text = "Tag billede", command=self.toggleLiveView)
@@ -179,7 +184,7 @@ class Edit_User(page):
         #data = ServerCommunication.getUser_private()
         
         #Creates boxes for input
-        self.userInfo()
+        self.userInfo(placeholder=False)
         self.btn_billede.config(text="Nyt billede")
         
         serverComm.getUser_private(userID, chipID)
@@ -220,7 +225,7 @@ class New_User(page):
         self.liveView = True
         
         #Creates boxes for input
-        self.userInfo()
+        self.userInfo(placeholder=True)
         
         newUserButton = tk.Button(self, text = "Opret ny bruger", command = self.newUser)
         newUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)
