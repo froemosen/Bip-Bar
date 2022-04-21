@@ -29,8 +29,8 @@ def SendDataPrivate(data):
         image = f.read()
     
     if user["chipID"] == data[1]:
-        emit("recievePrivateData", user, image)  
-    else: emit("recievePrivateData", {'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None)
+        emit("recievePrivateData", [user, image])  
+    else: emit("recievePrivateData", [{'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None])
 
 
 @socketio.on("NewUser")

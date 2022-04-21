@@ -396,15 +396,15 @@ if __name__ == "__main__":
         print("I'm disconnected!")
         
     @sio.on("recievePrivateData")
-    def recievePrivateData(data, image):
+    def recievePrivateData(data):
         print("PRIVATE DATA RECIEVED!")
         global privateUserData
         global userImage
-        userImage = image
-        privateUserData = data
+        
+        userImage = data[1]
+        privateUserData = data[0]
                 
-        print(data)
-        #main.New_User_Window.insertUser(data)
+        print(data[0])
         
     
     sio.connect('http://127.0.0.1:5000') #Connect to server
