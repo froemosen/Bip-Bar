@@ -181,19 +181,33 @@ class Bip_Bar(page):
         todayList.reverse()
         age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
-        #10 rows and 12 coloumns
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=25, font="FreeMono", padx = 20)
-        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=25, font="FreeMono")
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=25, font="FreeMono")
-        canvas = tk.Canvas(self, width = 300, height = 300)
+        drinkLabelWidth = 18
         
+        #10 rows and 12 coloumns
+        
+        #Creation of GUI
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5)
+        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono")
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono")
+        canvas = tk.Canvas(self, width = 400, height = 400)
+        
+        colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        fantaLabel = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
               
         
         
+        #Packing of GUI
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
         ageLabel.grid(row = 1, column = 0, columnspan = 9)
         balanceLabel.grid(row = 2, column = 0, columnspan = 9)
-        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 3)
+        canvas.grid(column= 10, row = 0 , rowspan = 3, columnspan = 3)
+        
+        colaregLabel.grid(row = 4, column = 0, columnspan = 3)
+        colazeroLabel.grid(row = 4, column = 0, columnspan = 3)
+        spriteLabel.grid(row = 4, column = 0, columnspan = 3)
+        fantaLabel.grid(row = 4, column = 0, columnspan = 3)
         
          
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
