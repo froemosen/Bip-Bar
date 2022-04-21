@@ -1,6 +1,7 @@
 import tkinter as tk # (pip install tkinter)
 import sys
 import os
+from app import NewUser
 import entryWithPlaceholder #entryWithPlaceholder.py (local file)
 import cv2 #Camera stuff (pip install opencv)
 import PIL.Image, PIL.ImageTk #tkinter stuff with PIL (pip install Pillow)
@@ -166,8 +167,7 @@ class Edit_User(page):
         text.grid(row = 0, column = 0, padx = 30, pady = 5)
         self.btn_getUser = tk.Button(self, text = "Hent chip", command = self.getUser, width=50, height=10, activebackground="green yellow")
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
-        
-        global privateUserData
+    
         
         #LiveView Boolean
         self.liveView = False
@@ -184,11 +184,13 @@ class Edit_User(page):
         
         serverComm.getUser_private(userID, chipID)
         
-        
         print("Awaiting data...")
-        time.sleep(1)
+        
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
+    
+    def insertUser(self, data):
+        pass
     
     def updateUser(self):
         pass
@@ -339,8 +341,7 @@ if __name__ == "__main__":
     main = MainFrame(base)
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
-    
-    privateUserData = {}
+
     
     #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
     
@@ -362,8 +363,11 @@ if __name__ == "__main__":
     @sio.on("recievePrivateData")
     def recievePrivateData(data):
         print("PRIVATE DATA RECIEVED!")
-        global privateUserData
+        privateUserData =  {}
         privateUserData = data
+        print(data)
+        #main.New_User_Window.insertUser(data)
+        
     
     sio.connect('http://127.0.0.1:5000') #Connect to server
     
