@@ -189,7 +189,7 @@ class Bip_Bar(page):
         birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5)
         ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono")
         balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono")
-        canvas = tk.Canvas(self, width = 250, height = 250)
+        canvas = tk.Canvas(self, width = 100, height = 100)
         
         colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
         colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
