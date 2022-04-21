@@ -193,14 +193,19 @@ class Edit_User(page):
         
         print("Data ready to be inserted!")
         
-        #INSERT HERE
+        #Inserting data i boxes
+        self.navnInput.insert(privateUserData["name"])
+        self.emailInput.insert(privateUserData["email"])
+        self.adresseInput.insert(privateUserData["adress"])
+        
+        dateList = privateUserData["birthday"].split("-")
+        self.date.insert(dateList[0])
+        self.month.insert(dateList[1])
+        self.year.insert(dateList[2])     
         
         privateUserData = {}
         
-        #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
-        #INSERT data INTO userInfo() BOXES
-
-    
+            
     def updateUser(self):
         pass
 
