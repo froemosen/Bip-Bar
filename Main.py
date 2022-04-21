@@ -152,14 +152,15 @@ class page(tk.Frame):
 class Bip_Bar(page):
     def __init__(self, *args, **kwargs):
         page.__init__(self, *args, **kwargs)
-        text = tk.Label(self, text = "New Transaction", width=20, font="FreeMono")
-        text.grid(row = 0, column = 0, padx = 30, pady = 5)
+        self.text = tk.Label(self, text = "New Transaction", width=20, font="FreeMono")
+        self.text.grid(row = 0, column = 0, padx = 30, pady = 5)
         self.btn_getUser = tk.Button(self, text = "Hent chip", command = self.getUser, width=50, height=10, activebackground="green yellow")
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
     
     def getUser(self): #Public data
         userID, chipID = nfcReader.readData()
         self.btn_getUser.destroy()
+        self.text.destroy()
         
         #Get relevant user data and image
         serverComm.getUser_public(userID, chipID)
@@ -181,16 +182,16 @@ class Bip_Bar(page):
         age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
         #10 rows and 12 coloumns
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}")
-        ageLabel = tk.Label(self, text = f"Current Age: {age}")
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}")
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", height = 15)
+        ageLabel = tk.Label(self, text = f"Current Age: {age}", height = 15)
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", height = 15)
         canvas = tk.Canvas(self, width = 300, height = 300)      
         
         
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
         ageLabel.grid(row = 1, column = 0, columnspan = 9)
         balanceLabel.grid(row = 2, column = 0, columnspan = 9)
-        canvas.grid(column= 10, row=0 , rowspan = 3)
+        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 3)
         
          
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
@@ -413,7 +414,7 @@ if __name__ == "__main__":
     base = tk.Tk()
     base.title("Bip Bar")
     main = MainFrame(base)
-    main.pack(side = "top", fill = "both", expand = False)
+    main.pack(side = "top", fill = "both", expand = True)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
 
     userData = {}
