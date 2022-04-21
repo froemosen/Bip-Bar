@@ -202,12 +202,12 @@ class Bip_Bar(page):
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
         ageLabel.grid(row = 1, column = 0, columnspan = 9)
         balanceLabel.grid(row = 2, column = 0, columnspan = 9)
-        canvas.grid(column= 10, row = 0 , rowspan = 3, columnspan = 3)
+        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 3)
         
         colaregLabel.grid(row = 4, column = 0, columnspan = 3)
-        colazeroLabel.grid(row = 4, column = 0, columnspan = 3)
-        spriteLabel.grid(row = 4, column = 0, columnspan = 3)
-        fantaLabel.grid(row = 4, column = 0, columnspan = 3)
+        colazeroLabel.grid(row = 4, column = 3, columnspan = 3)
+        spriteLabel.grid(row = 4, column = 6, columnspan = 3)
+        fantaLabel.grid(row = 4, column = 9, columnspan = 3)
         
          
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
