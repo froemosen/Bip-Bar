@@ -44,8 +44,8 @@ def NewUser(data):
 
 @socketio.on("Billede")
 def Billede(data):
-    directory = "IDPhotos"
-    data.save(directory)
+    with open(f"ServerPhotos/{data[0]}.jpg", "wb") as binary_file:
+        binary_file.write(data[1]) # Write bytes to file
     
 
 

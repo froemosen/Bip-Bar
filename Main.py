@@ -227,9 +227,11 @@ class New_User(page):
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg")) #Image to ImageTK object
         self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
+        image_data = [UserID]
+        
         #Load image again to send in right format
         with open(f'IDPhotos/{UserID}.jpg', 'rb') as f:
-            image_data = f.read()
+            image_data[1] = f.read()
             
         #Send UserData and Image to Server
         serverComm.updateUser(userData, image_data)
@@ -312,9 +314,9 @@ class ServerCommunication():
         sio.emit("PublicData", userID)
         sio.emit("GetBillede", userID)
     
-    def updateUser(self, userData, image):
+    def updateUser(self, userData, imageData):
         sio.emit("NewUser", userData)
-        sio.emit("Billede", image)
+        sio.emit("Billede", imageData)
     
     def createTransaction(self, transInfo):
         sio.emit("Trans", transInfo)
