@@ -186,11 +186,20 @@ class Edit_User(page):
         
         print("Awaiting data...")
         
+        global privateUserData
+        while privateUserData == {}:
+            time.sleep(0.2)
+        
+        
+        print("Data ready to be inserted!")
+        
+        #INSERT HERE
+        
+        privateUserData = {}
+        
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
-    
-    def insertUser(self, data):
-        pass
+
     
     def updateUser(self):
         pass
@@ -347,6 +356,7 @@ if __name__ == "__main__":
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
 
+    privateUserData = {}
     
     #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
     
@@ -368,7 +378,7 @@ if __name__ == "__main__":
     @sio.on("recievePrivateData")
     def recievePrivateData(data):
         print("PRIVATE DATA RECIEVED!")
-        privateUserData =  {}
+        global privateUserData
         privateUserData = data
         print(data)
         #main.New_User_Window.insertUser(data)
