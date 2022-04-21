@@ -25,7 +25,7 @@ def SendDataPrivate(data):
     user = (dbfile[data[0]])
     print(user)
     
-    userID = data[0].keys()[0]
+    userID = data.keys()[0]
     
     with open(f'ServerPhotos/{userID}.jpg', 'rb') as f:
         image = f.read()
