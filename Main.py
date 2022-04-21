@@ -186,10 +186,10 @@ class Bip_Bar(page):
         #10 rows and 12 coloumns
         
         #Creation of GUI
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5)
-        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono")
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono")
-        canvas = tk.Canvas(self, width = 100, height = 100)
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5,  bg = "gray82")
+        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono", bg = "gray82")
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono", bg = "gray82")
+        canvas = tk.Canvas(self, width = 250, height = 250)
         
         colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
         colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
@@ -218,9 +218,9 @@ class Bip_Bar(page):
         
         
         #Packing of GUI
-        birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
-        ageLabel.grid(row = 1, column = 0, columnspan = 9)
-        balanceLabel.grid(row = 2, column = 0, columnspan = 9)
+        birthdayLabel.grid(row = 0, column = 0, columnspan = 9, sticky = "N", pady = 5)
+        ageLabel.grid(row = 1, column = 0, columnspan = 9, sticky = "N", pady = 5)
+        balanceLabel.grid(row = 2, column = 0, columnspan = 9, sticky = "N", pady = 5)
         canvas.grid(column = 9, row = 0 , rowspan = 3, columnspan = 3)
         
         colaregLabel.grid(row = 3, column = 0, columnspan = 3)
