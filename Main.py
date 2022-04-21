@@ -181,14 +181,16 @@ class Bip_Bar(page):
         todayList.reverse()
         age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
+        informationWidth = 50
         drinkLabelWidth = 18
+        imageSize = 128
         
         #10 rows and 12 coloumns
         
         #Creation of GUI
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5,  bg = "gray82")
-        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono", bg = "gray82")
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono", bg = "gray82")
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=informationWidth, font="FreeMono", padx = 5,  bg = "gray82")
+        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=informationWidth, font="FreeMono", bg = "gray82")
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=informationWidth, font="FreeMono", bg = "gray82")
         canvas = tk.Canvas(self, width = 250, height = 250)
         
         colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
@@ -196,10 +198,14 @@ class Bip_Bar(page):
         spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
         fantaLabel = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
         
-        colaregImage = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        colazeroImage = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        spriteImage = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        fantaImage = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        self.colaregImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\CocaColaReg.png"))
+        colaregCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        self.colazeroImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\CocaColaZero.png"))
+        colazeroCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        self.spriteImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\Sprite.png"))
+        spriteCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        self.fantaImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\Fanta.png"))
+        fantaCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
         
         colaRegBtnDown = tk.Button(self, text = "-")
         colaRegAmountLabel = tk.Label(self, text = "0")
@@ -209,7 +215,7 @@ class Bip_Bar(page):
         colaZeroBtnUp = tk.Button(self, text = "+")
         spriteBtnDown = tk.Button(self, text = "-")
         spriteAmountLabel = tk.Label(self, text = "0")
-        spriteBtnUp = tk.Button(self, text = "+")
+        spriteBtnUp = tk.Button(self, text = "+", )
         fantaBtnDown = tk.Button(self, text = "-")
         fantaAmountLabel = tk.Label(self, text = "0")
         fantaBtnUp = tk.Button(self, text = "+")
@@ -228,10 +234,10 @@ class Bip_Bar(page):
         spriteLabel.grid(row = 3, column = 6, columnspan = 3)
         fantaLabel.grid(row = 3, column = 9, columnspan = 3)
         
-        colaregImage.grid(row = 4, column = 0, columnspan = 3)
-        colazeroImage.grid(row = 4, column = 3, columnspan = 3)
-        spriteImage.grid(row = 4, column = 6, columnspan = 3)
-        fantaImage.grid(row = 4, column = 9, columnspan = 3)
+        colaregCanvas.grid(row = 4, column = 0, columnspan = 3)
+        colazeroCanvas.grid(row = 4, column = 3, columnspan = 3)
+        spriteCanvas.grid(row = 4, column = 6, columnspan = 3)
+        fantaCanvas.grid(row = 4, column = 9, columnspan = 3)
         
         colaRegBtnDown.grid(row = 5, column = 0)
         colaRegAmountLabel.grid(row = 5, column = 1)
@@ -245,6 +251,11 @@ class Bip_Bar(page):
         fantaBtnDown.grid(row = 5, column = 9)
         fantaAmountLabel.grid(row = 5, column = 10)
         fantaBtnUp.grid(row = 5, column = 11)
+        
+        colaregCanvas.create_image(2, 2, image = self.colaregImage, anchor = "nw")
+        colazeroCanvas.create_image(2, 2, image = self.colazeroImage, anchor = "nw")
+        spriteCanvas.create_image(2, 2, image = self.spriteImage, anchor = "nw")
+        fantaCanvas.create_image(2, 2, image = self.fantaImage, anchor = "nw")
         
         
         
@@ -504,7 +515,7 @@ if __name__ == "__main__":
         print(data[0])
         
     
-    sio.connect('http://127.0.0.1:5000') #Connect to server
+    sio.connect('http://192.168.0.47') #Connect to server
     
     
     base.mainloop() #TKINTER MAIN LOOP
