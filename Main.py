@@ -7,6 +7,7 @@ import PIL.Image, PIL.ImageTk #tkinter stuff with PIL (pip install Pillow)
 import uuid #Random uuid-generation
 import ndef # (pip install ndefpy)? - might be included in (pip install nfc)?
 import socketio # (pip install "python-socketio[client]")
+import time
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -166,11 +167,13 @@ class Edit_User(page):
         self.btn_getUser = tk.Button(self, text = "Hent chip", command = self.getUser, width=50, height=10, activebackground="green yellow")
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
         
+        global privateUserData
+        
         #LiveView Boolean
         self.liveView = False
         
     def getUser(self): #Private and public data
-        #data = nfcReader.readData()
+        userID, chipID = nfcReader.readData()
         #print(data)
         self.btn_getUser.destroy()
         #data = ServerCommunication.getUser_private()
@@ -179,7 +182,11 @@ class Edit_User(page):
         self.userInfo()
         self.btn_billede.config(text="Nyt billede")
         
-        serverComm.getUser_private()
+        serverComm.getUser_private(userID, chipID)
+        
+        while privateUserData == {}:
+            print("Awaiting data...")
+            time.sleep(0.4)
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
     
@@ -259,20 +266,23 @@ class NFC_Reader():
         print("Tag found!")
         print(tag)
         
+        chipID = tag.identifier.hex()
+        
         if tag.ndef == None: #If tag is authenticated or carries no data.
             tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3")
         
         if not tag.ndef == None: #If tag carries data
-            for record in tag.ndef.records:  #Print all records
-                print(record)
+            record = tag.ndef.records[0]
+            userID = record.resource.uri #Gets the userID from the NFC-tag records
+            
             self.clf.close()
-            return(tag.ndef.records)
+            return(userID, chipID)
         
         else: 
             print(tag.dump())
             print("Card Carries No Data!\n")
             self.clf.close()
-            return(None)
+            return(None, None)
     
     
     def writeData(self, inputData):
@@ -306,12 +316,12 @@ class ServerCommunication():
     def __init__(self):
         global sio
     
-    def getUser_private(self, userID):
-        sio.emit("PrivateData", userID)
+    def getUser_private(self, userID, chipID):
+        sio.emit("PrivateData", [userID, chipID])
         sio.emit("GetBillede", userID)
     
-    def getUser_public(self, userID):
-        sio.emit("PublicData", userID)
+    def getUser_public(self, userID, chipID):
+        sio.emit("PublicData", [userID, chipID])
         sio.emit("GetBillede", userID)
     
     def updateUser(self, userData, imageData):
@@ -330,6 +340,7 @@ if __name__ == "__main__":
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
     
+    privateUserData = {}
     
     #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
     
@@ -347,6 +358,11 @@ if __name__ == "__main__":
     @sio.event
     def disconnect():
         print("I'm disconnected!")
+        
+    @sio.event
+    def recievePrivateData(data):
+        print("PRIVATE DATA RECIEVED!")
+        privateUserData = data
     
     sio.connect('http://127.0.0.1:5000') #Connect to server
     

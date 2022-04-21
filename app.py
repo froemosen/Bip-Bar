@@ -9,22 +9,23 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @socketio.on('PublicData') 
-def SendDataPublic():
+def SendDataPublic(data):
     print("I HAVE RECIEVED THE 'PublicData' REQUEST")
-    dbfile = open('dbbb', 'ab')
-    user = (dbfile[0])
-    emit(user)
-    pickle.dump(db, dbfile)                     
-    dbfile.close()
+    dbfile = pickle.load(open( "dbbb", "rb"))
+    user = (dbfile[data[0]])
+    
+    emit(user)                
+    
     
 
 socketio.on("PrivateData")
-def SendDataPrivite():
-    dbfile = open('dbbb', 'ab')
-    user = (dbfile[0])
-    pickle.dump(db, dbfile)                     
-    dbfile.close()
-    emit(user)
+def SendDataPrivate(data):
+    print("I HAVE RECIEVED THE 'PrivateData' REQUEST")
+    dbfile = pickle.load(open( "dbbb", "rb"))
+    user = (dbfile[data[0]])
+    print(user)
+    if user["chipID"] == data[1]:
+        emit("recievePrivateData", user)  
 
 
 @socketio.on("NewUser")
@@ -44,6 +45,11 @@ def NewUser(data):
 def Billede(data):
     with open(f"ServerPhotos/{data[0]}.jpg", "wb") as binary_file:
         binary_file.write(data[1]) # Write bytes to file
+        
+@socketio.on("GetBillede")
+def Billede(data):
+    with open(f"ServerPhotos/{data}.jpg", "rb") as binary_file:
+        # Write bytes to file
     
 
 
