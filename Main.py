@@ -157,10 +157,28 @@ class Bip_Bar(page):
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
     
     def getUser(self): #Public data
-        data = nfcReader.readData()
-        print(data)
+        userID, chipID = nfcReader.readData()
         
         self.btn_getUser.destroy()
+        
+        serverComm.getUser_public(userID, chipID)
+        
+        print("Awaiting data...")
+        
+        global userData
+        global userImage
+        
+        while userData == {}:
+            time.sleep(0.2)
+        
+        print("Data ready to be inserted!")
+        
+        ###CREATE TRANSACTION MENU HERE
+        print(userData)
+        
+        
+        userData = {}
+        userImage = None
     
     def createTransaction(self):
         pass
@@ -191,21 +209,21 @@ class Edit_User(page):
         
         print("Awaiting data...")
         
-        global privateUserData
+        global userData
         global userImage
         
-        while privateUserData == {}:
+        while userData == {}:
             time.sleep(0.2)
         
         
         print("Data ready to be inserted!")
         
         #Inserting data i boxes
-        self.navnInput.insert(0, privateUserData["name"])
-        self.emailInput.insert(0, privateUserData["email"])
-        self.adresseInput.insert(0, privateUserData["adress"])
+        self.navnInput.insert(0, userData["name"])
+        self.emailInput.insert(0, userData["email"])
+        self.adresseInput.insert(0, userData["adress"])
         
-        dateList = privateUserData["birthday"].split("-")
+        dateList = userData["birthday"].split("-")
         self.date.insert(0, dateList[0])
         self.month.insert(0, dateList[1])
         self.year.insert(0, dateList[2])    
@@ -216,7 +234,7 @@ class Edit_User(page):
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
         self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
-        privateUserData = {}
+        userData = {}
         userImage = None
         
             
@@ -375,7 +393,7 @@ if __name__ == "__main__":
     main.pack(side = "top", fill = "both", expand = False)
     base.wm_geometry("1200x700") #Vi skal definere en størrelse fordi siden ville collapse ind på kasserne til knapperne 
 
-    privateUserData = {}
+    userData = {}
     userImage = None
     
     #base.mainloop() #USE ONLY FOR TESTING WITHOUT SERVER
@@ -395,14 +413,14 @@ if __name__ == "__main__":
     def disconnect():
         print("I'm disconnected!")
         
-    @sio.on("recievePrivateData")
+    @sio.on("recieveData")
     def recievePrivateData(data):
-        print("PRIVATE DATA RECIEVED!")
-        global privateUserData
+        print("USER DATA RECIEVED!")
+        global userData
         global userImage
         
         userImage = data[1]
-        privateUserData = data[0]
+        userData = data[0]
                 
         print(data[0])
         

@@ -5,7 +5,6 @@ from flask_socketio import SocketIO, send, emit
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 @socketio.on('PublicData') 
@@ -14,7 +13,18 @@ def SendDataPublic(data):
     dbfile = pickle.load(open( "dbbb", "rb"))
     user = (dbfile[data[0]])
     
-    emit(user)                
+    user.pop("name")
+    user.pop("email")
+    user.pop("adress")
+    
+    print(user)
+    
+    with open(f'ServerPhotos/{data[0]}.jpg', 'rb') as f:
+        image = f.read()
+    
+    if user["chipID"] == data[1]:
+        emit("recieveData", [user, image])  
+    else: emit("recieveData", [{'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None])                
     
     
 
@@ -29,8 +39,8 @@ def SendDataPrivate(data):
         image = f.read()
     
     if user["chipID"] == data[1]:
-        emit("recievePrivateData", [user, image])  
-    else: emit("recievePrivateData", [{'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None])
+        emit("recieveData", [user, image])  
+    else: emit("recieveData", [{'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}}, None])
 
 
 @socketio.on("NewUser")
