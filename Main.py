@@ -514,8 +514,9 @@ if __name__ == "__main__":
                 
         print(data[0])
         
-    
-    sio.connect('http://192.168.0.47') #Connect to server
+    #print("Connecting to server... please wait up to 60 seconds")
+    #sio.connect('https://froemosen.pythonanywhere.com', wait_timeout = 60) #Connect to server
+    sio.connect('http://127.0.0.1/' ) #Connect to local server
     
     
     base.mainloop() #TKINTER MAIN LOOP
