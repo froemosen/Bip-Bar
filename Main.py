@@ -318,7 +318,7 @@ class ServerCommunication():
     
     def getUser_private(self, userID, chipID):
         sio.emit("PrivateData", [userID, chipID])
-        sio.emit("GetBillede", userID)
+        #sio.emit("GetBillede", userID)
     
     def getUser_public(self, userID, chipID):
         sio.emit("PublicData", [userID, chipID])

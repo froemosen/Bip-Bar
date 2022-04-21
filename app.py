@@ -26,6 +26,7 @@ def SendDataPrivate(data):
     print(user)
     if user["chipID"] == data[1]:
         emit("recievePrivateData", user)  
+    else: emit("recievePrivateData", {'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}})
 
 
 @socketio.on("NewUser")
