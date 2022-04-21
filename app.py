@@ -24,8 +24,14 @@ def SendDataPrivate(data):
     dbfile = pickle.load(open( "dbbb", "rb"))
     user = (dbfile[data[0]])
     print(user)
+    
+    userID = data[0].keys()[0]
+    
+    with open(f'ServerPhotos/{userID}.jpg', 'rb') as f:
+        image = f.read()
+    
     if user["chipID"] == data[1]:
-        emit("recievePrivateData", user)  
+        emit("recievePrivateData", user, image)  
     else: emit("recievePrivateData", {'name':'FALSE CHIP-ID', 'email': 'FALSE CHIP-ID', 'adress': 'FALSE CHIP-ID', 'birthday': '0-0-0', 'chipID': '00000000000', 'balance': 0, 'transactions': {}})
 
 
