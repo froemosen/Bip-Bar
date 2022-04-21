@@ -185,7 +185,9 @@ class Bip_Bar(page):
         birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", height = 15)
         ageLabel = tk.Label(self, text = f"Current Age: {age}", height = 15)
         balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", height = 15)
-        canvas = tk.Canvas(self, width = 300, height = 300)      
+        canvas = tk.Canvas(self, width = 300, height = 300)
+        
+              
         
         
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
