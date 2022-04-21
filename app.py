@@ -18,7 +18,7 @@ def SendDataPublic(data):
     
     
 
-socketio.on("PrivateData")
+@socketio.on("PrivateData")
 def SendDataPrivate(data):
     print("I HAVE RECIEVED THE 'PrivateData' REQUEST")
     dbfile = pickle.load(open( "dbbb", "rb"))
@@ -32,6 +32,8 @@ def SendDataPrivate(data):
 @socketio.on("NewUser")
 def NewUser(data):
     # database
+    print("New user is being created...")
+    
     db = pickle.load(open("dbbb", "rb")) #Load database   
     dbUser = data #userData
     db.update(dbUser) #update userData in database

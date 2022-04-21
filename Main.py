@@ -319,18 +319,23 @@ class ServerCommunication():
         global sio
     
     def getUser_private(self, userID, chipID):
-        sio.emit("PrivateData", [userID, chipID])
+        print("Making private user data request...")
+        data = [userID, chipID]
+        sio.emit("PrivateData", data)
         #sio.emit("GetBillede", userID)
     
     def getUser_public(self, userID, chipID):
+        print("Making public user data request...")
         sio.emit("PublicData", [userID, chipID])
         sio.emit("GetBillede", userID)
     
     def updateUser(self, userData, imageData):
+        print("Making updateUser request...")
         sio.emit("NewUser", userData)
         sio.emit("Billede", imageData)
     
     def createTransaction(self, transInfo):
+        print("Making transaction request...")
         sio.emit("Trans", transInfo)
 
 if __name__ == "__main__":
