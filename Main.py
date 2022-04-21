@@ -231,7 +231,7 @@ class New_User(page):
         
         #Load image again to send in right format
         with open(f'IDPhotos/{UserID}.jpg', 'rb') as f:
-            image_data[1] = f.read()
+            image_data.append(f.read())
             
         #Send UserData and Image to Server
         serverComm.updateUser(userData, image_data)
