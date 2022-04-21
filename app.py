@@ -48,8 +48,11 @@ def Billede(data):
         
 @socketio.on("GetBillede")
 def Billede(data):
-    with open(f"ServerPhotos/{data}.jpg", "rb") as binary_file:
+    pass 
+    """with open(f"ServerPhotos/{data}.jpg", "rb") as binary_file:
         # Write bytes to file
+        pass"""
+    
     
 
 

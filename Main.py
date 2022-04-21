@@ -184,9 +184,9 @@ class Edit_User(page):
         
         serverComm.getUser_private(userID, chipID)
         
-        while privateUserData == {}:
-            print("Awaiting data...")
-            time.sleep(0.4)
+        
+        print("Awaiting data...")
+        time.sleep(1)
         #serverComm.getUser_private(data[0]) #Get user for specified nfc-chip
         #INSERT data INTO userInfo() BOXES
     
@@ -359,9 +359,10 @@ if __name__ == "__main__":
     def disconnect():
         print("I'm disconnected!")
         
-    @sio.event
+    @sio.on("recievePrivateData")
     def recievePrivateData(data):
         print("PRIVATE DATA RECIEVED!")
+        global privateUserData
         privateUserData = data
     
     sio.connect('http://127.0.0.1:5000') #Connect to server
