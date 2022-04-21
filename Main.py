@@ -182,9 +182,9 @@ class Bip_Bar(page):
         age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
         #10 rows and 12 coloumns
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", height = 15)
-        ageLabel = tk.Label(self, text = f"Current Age: {age}", height = 15)
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", height = 15)
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=18, font="FreeMono")
+        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=18, font="FreeMono")
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=18, font="FreeMono")
         canvas = tk.Canvas(self, width = 300, height = 300)
         
               
