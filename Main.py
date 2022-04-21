@@ -108,8 +108,8 @@ class page(tk.Frame):
         # ---------------------------------------------------------
 
         self.vcap = cv2.VideoCapture(0)
-        self.width = 300
-        self.height = 300
+        self.width = 400
+        self.height = 400
     
         #Canvas
         self.canvas1 = tk.Canvas(self)
@@ -189,7 +189,7 @@ class Bip_Bar(page):
         birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=30, font="FreeMono", padx = 5)
         ageLabel = tk.Label(self, text = f"Current Age: {age}", width=30, font="FreeMono")
         balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=30, font="FreeMono")
-        canvas = tk.Canvas(self, width = 400, height = 400)
+        canvas = tk.Canvas(self, width = 500, height = 500)
         
         colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
         colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
@@ -202,7 +202,7 @@ class Bip_Bar(page):
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
         ageLabel.grid(row = 1, column = 0, columnspan = 9)
         balanceLabel.grid(row = 2, column = 0, columnspan = 9)
-        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 3)
+        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 4)
         
         colaregLabel.grid(row = 4, column = 0, columnspan = 3)
         colazeroLabel.grid(row = 4, column = 3, columnspan = 3)
