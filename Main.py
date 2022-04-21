@@ -201,18 +201,18 @@ class Bip_Bar(page):
         spriteImage = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
         fantaImage = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
         
-        colaRegBtnDown = tk.Button(self, label = "-")
+        colaRegBtnDown = tk.Button(self, text = "-")
         colaRegAmountLabel = tk.Label(self, text = "0")
-        colaRegBtnUp = tk.Button(self, label = "+")
-        colaZeroBtnDown = tk.Button(self, label = "-")
+        colaRegBtnUp = tk.Button(self, text = "+")
+        colaZeroBtnDown = tk.Button(self, text = "-")
         colaZeroAmountLabel = tk.Label(self, text = "0")
-        colaZeroBtnUp = tk.Button(self, label = "+")
-        spriteBtnDown = tk.Button(self, label = "-")
+        colaZeroBtnUp = tk.Button(self, text = "+")
+        spriteBtnDown = tk.Button(self, text = "-")
         spriteAmountLabel = tk.Label(self, text = "0")
-        spriteBtnUp = tk.Button(self, label = "+")
-        fantaBtnDown = tk.Button(self, label = "-")
+        spriteBtnUp = tk.Button(self, text = "+")
+        fantaBtnDown = tk.Button(self, text = "-")
         fantaAmountLabel = tk.Label(self, text = "0")
-        fantaBtnUp = tk.Button(self, label = "+")
+        fantaBtnUp = tk.Button(self, text = "+")
         
               
         
