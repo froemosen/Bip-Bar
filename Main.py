@@ -9,6 +9,7 @@ import uuid #Random uuid-generation
 import ndef # (pip install ndefpy)? - might be included in (pip install nfc)?
 import socketio # (pip install "python-socketio[client]")
 import time
+from datetime import date
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -158,24 +159,46 @@ class Bip_Bar(page):
     
     def getUser(self): #Public data
         userID, chipID = nfcReader.readData()
-        
         self.btn_getUser.destroy()
         
+        #Get relevant user data and image
         serverComm.getUser_public(userID, chipID)
-        
         print("Awaiting data...")
-        
         global userData
         global userImage
-        
         while userData == {}:
             time.sleep(0.2)
-        
         print("Data ready to be inserted!")
+        
+        with open(f"currentImage.jpg", "wb") as binary_file: #Save image for later
+            binary_file.write(userImage) # Write bytes to file
+        
+        #calculate age
+        birthdayList = userData["birthday"].split("-")
+        today = str(date.today())
+        todayList = today.split("-")
+        todayList.reverse()
+        age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
+        
+        #10 rows and 12 coloumns
+        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}")
+        ageLabel = tk.Label(self, text = f"Current Age: {age}")
+        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}")
+        canvas = tk.Canvas(self, width = 300, height = 300)      
+        
+        
+        birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
+        ageLabel.grid(row = 1, column = 0, columnspan = 9)
+        balanceLabel.grid(row = 2, column = 0, columnspan = 9)
+        canvas.grid(column= 10, row=0 , rowspan = 3)
+        
+         
+        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
+        canvas.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
         ###CREATE TRANSACTION MENU HERE
         print(userData)
-        
+    
         
         userData = {}
         userImage = None
