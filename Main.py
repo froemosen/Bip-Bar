@@ -195,6 +195,25 @@ class Bip_Bar(page):
         colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
         spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
         fantaLabel = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        
+        colaregImage = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        colazeroImage = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        spriteImage = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        fantaImage = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        
+        colaRegBtnDown = tk.Button(self, label = "-")
+        colaRegAmountLabel = tk.Label(self, text = "0")
+        colaRegBtnUp = tk.Button(self, label = "+")
+        colaZeroBtnDown = tk.Button(self, label = "-")
+        colaZeroAmountLabel = tk.Label(self, text = "0")
+        colaZeroBtnUp = tk.Button(self, label = "+")
+        spriteBtnDown = tk.Button(self, label = "-")
+        spriteAmountLabel = tk.Label(self, text = "0")
+        spriteBtnUp = tk.Button(self, label = "+")
+        fantaBtnDown = tk.Button(self, label = "-")
+        fantaAmountLabel = tk.Label(self, text = "0")
+        fantaBtnUp = tk.Button(self, label = "+")
+        
               
         
         
@@ -202,12 +221,32 @@ class Bip_Bar(page):
         birthdayLabel.grid(row = 0, column = 0, columnspan = 9)
         ageLabel.grid(row = 1, column = 0, columnspan = 9)
         balanceLabel.grid(row = 2, column = 0, columnspan = 9)
-        canvas.grid(column= 10, row = 0 , rowspan = 4, columnspan = 4)
+        canvas.grid(column = 9, row = 0 , rowspan = 3, columnspan = 3)
         
-        colaregLabel.grid(row = 4, column = 0, columnspan = 3)
-        colazeroLabel.grid(row = 4, column = 3, columnspan = 3)
-        spriteLabel.grid(row = 4, column = 6, columnspan = 3)
-        fantaLabel.grid(row = 4, column = 9, columnspan = 3)
+        colaregLabel.grid(row = 3, column = 0, columnspan = 3)
+        colazeroLabel.grid(row = 3, column = 3, columnspan = 3)
+        spriteLabel.grid(row = 3, column = 6, columnspan = 3)
+        fantaLabel.grid(row = 3, column = 9, columnspan = 3)
+        
+        colaregImage.grid(row = 4, column = 0, columnspan = 3)
+        colazeroImage.grid(row = 4, column = 3, columnspan = 3)
+        spriteImage.grid(row = 4, column = 6, columnspan = 3)
+        fantaImage.grid(row = 4, column = 9, columnspan = 3)
+        
+        colaRegBtnDown.grid(row = 5, column = 0)
+        colaRegAmountLabel.grid(row = 5, column = 1)
+        colaRegBtnUp.grid(row = 5, column = 2)
+        colaZeroBtnDown.grid(row = 5, column = 3)
+        colaZeroAmountLabel.grid(row = 5, column = 4)
+        colaZeroBtnUp.grid(row = 5, column = 5)
+        spriteBtnDown.grid(row = 5, column = 6)
+        spriteAmountLabel.grid(row = 5, column = 7)
+        spriteBtnUp.grid(row = 5, column = 8)
+        fantaBtnDown.grid(row = 5, column = 9)
+        fantaAmountLabel.grid(row = 5, column = 10)
+        fantaBtnUp.grid(row = 5, column = 11)
+        
+        
         
          
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
