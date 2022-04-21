@@ -8,8 +8,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-db = {}
-
 @socketio.on('PublicData') 
 def SendDataPublic():
     print("I HAVE RECIEVED THE 'PublicData' REQUEST")
@@ -32,13 +30,13 @@ def SendDataPrivite():
 @socketio.on("NewUser")
 def NewUser(data):
     # database
-    dbfile = open('dbbb', 'ab')   
-    dbUser = data
-    db.update(dbUser)
-      
-    # Its important to use binary mode
+    db = pickle.load(open("dbbb", "rb")) #Load database   
+    dbUser = data #userData
+    db.update(dbUser) #update userData in database
+    
 
-    # source, destination
+    #Write to database and save
+    dbfile = open('dbbb', 'wb')
     pickle.dump(db, dbfile)                     
     dbfile.close()
 
