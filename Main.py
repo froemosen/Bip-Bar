@@ -194,14 +194,14 @@ class Edit_User(page):
         print("Data ready to be inserted!")
         
         #Inserting data i boxes
-        self.navnInput.insert(privateUserData["name"])
-        self.emailInput.insert(privateUserData["email"])
-        self.adresseInput.insert(privateUserData["adress"])
+        self.navnInput.insert(0, privateUserData["name"])
+        self.emailInput.insert(0, privateUserData["email"])
+        self.adresseInput.insert(0, privateUserData["adress"])
         
         dateList = privateUserData["birthday"].split("-")
-        self.date.insert(dateList[0])
-        self.month.insert(dateList[1])
-        self.year.insert(dateList[2])     
+        self.date.insert(0, dateList[0])
+        self.month.insert(0, dateList[1])
+        self.year.insert(0, dateList[2])     
         
         privateUserData = {}
         
