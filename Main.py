@@ -284,7 +284,8 @@ class NFC_Reader():
             self.clf.close()  #Test over - New connection will be needed
             
         tag = self.clf.connect(rdwr={'on-connect': lambda tag: False})
-        tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3") #Tries to unlock chip, if it was already locked by us.
+        if tag.ndef == None: #If tag is authenticated or carries no data.
+            tag.authenticate(b"203ec79c-9288-4612-bac3-9e827d43c5d3") #Unlocks tag
         print("Tag found!")
         print(tag)
         
