@@ -450,8 +450,34 @@ class Edit_User(page):
         userImage = None
         
             
-    def updateUser(self):
-        pass
+    def updateUser(self, UserID, balance, transactions):
+        ID = nfcReader.writeData(UserID) #WRITE UserID TO NFC-CHIP AND SECURE
+   
+        cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) #Save image of user for identification
+        
+        #Get userdata and format in order to send to server
+        #userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
+        userData = {UserID : {"name" : str(self.navnInput.get()),
+                              "email" : str(self.emailInput.get()),
+                              "adress" : str(self.adresseInput.get()),
+                              "birthday" : str(self.date.get()+'-'+self.month.get()+'-'+self.year.get()),
+                              "chipID" : ID,
+                              "balance" : balance,
+                              "transactions" : transactions
+                              }} 
+        print(userData)
+        
+        self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"IDPhotos/{UserID}.jpg")) #Image to ImageTK object
+        self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
+        
+        image_data = [UserID]
+        
+        #Load image again to send in right format
+        with open(f'IDPhotos/{UserID}.jpg', 'rb') as f:
+            image_data.append(f.read())
+            
+        #Send UserData and Image to Server
+        serverComm.updateUser(userData, image_data)
 
 
 class New_User(page):
