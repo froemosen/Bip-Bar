@@ -7,6 +7,10 @@ from flask_socketio import SocketIO, send, emit
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+@app.route("/")
+def hello_world():
+    return "<h1>Hello, World!</h1>\n<h3>This is the Bip-Bar website running locally!</h3>"
+
 @socketio.on('PublicData') 
 def SendDataPublic(data):
     print("I HAVE RECIEVED THE 'PublicData' REQUEST")

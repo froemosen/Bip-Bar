@@ -1,6 +1,7 @@
 import tkinter as tk # (pip install tkinter)
 import sys
 import os
+from turtle import distance
 from app import NewUser
 import entryWithPlaceholder #entryWithPlaceholder.py (local file)
 import cv2 #Camera stuff (pip install opencv)
@@ -52,6 +53,7 @@ class MainFrame(tk.Frame):
     
     def reset(self):
         os.execl(sys.executable, sys.executable, *sys.argv)      
+
 
 class page(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -181,22 +183,41 @@ class Bip_Bar(page):
         todayList.reverse()
         age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
-        informationWidth = 50
-        drinkLabelWidth = 18
-        imageSize = 128
+        informationWidth = 28
+        informationHeight = 1
+        informationFont = ("FreeMono", 24, "bold")
+        informationBG = "gray82"
+        drinkLabelWidth = 22
+        drinkFont = ("FreeMono", 20)
+        imageSize = 200
         
         #10 rows and 12 coloumns
         
         #Creation of GUI
-        birthdayLabel = tk.Label(self, text = f"Date of Birth: {userData['birthday']}", width=informationWidth, font="FreeMono", padx = 5,  bg = "gray82")
-        ageLabel = tk.Label(self, text = f"Current Age: {age}", width=informationWidth, font="FreeMono", bg = "gray82")
-        balanceLabel = tk.Label(self, text = f"Account Balance: {userData['balance']}", width=informationWidth, font="FreeMono", bg = "gray82")
-        canvas = tk.Canvas(self, width = 250, height = 250)
+        infoBG = tk.Frame(self, bg = informationBG, height = 12, width = 200, borderwidth=4, relief="ridge", pady=4)
+        cancelTransactionBtn = tk.Button(infoBG, text = "Cancel Transaction", height = 15, width = 23, bg = "red", command = self.createTransaction)
+        createTransactionBtn = tk.Button(infoBG, text = "Create Transaction", height = 15, width = 23, bg = "lawngreen", command = self.createTransaction)
+        totalAmountLabel = tk.Label(infoBG, text = "Total Amount: ", width = 21, bg = informationBG, font = drinkFont)
+        remainBalanceLabel = tk.Label(infoBG, text = "Remaining Balance: ", width = 21, bg = informationBG, font = drinkFont)
+        totalAmountValue = tk.Label(infoBG, text = "0", width = 8, anchor='w', bg = informationBG, font = drinkFont)
+        remainBalanceValue = tk.Label(infoBG, text = "0", width = 8, anchor='w', bg = informationBG, font = drinkFont)
+        ageLabel = tk.Label(infoBG, text = f"Current Age: {age}", width=informationWidth, height = informationHeight, font=informationFont, padx=6, bg = informationBG)
+        balanceLabel = tk.Label(infoBG, text = f"Account Balance: {userData['balance']}", width=informationWidth, height = informationHeight, font=informationFont, padx=6, bg = informationBG)
+        canvas = tk.Canvas(infoBG, width = 320, height = 240)
+        if int(age) >= 18: alcoholAllowedLabel = tk.Label(infoBG, text = "Alcohol is allowed", width=informationWidth, height = informationHeight, font=informationFont, padx=6, bg = informationBG, fg = "lime green") 
+        else: alcoholAllowedLabel = tk.Label(infoBG, text = "Alcohol not allowed", width=informationWidth, height = informationHeight, font=informationFont, padx=6, bg = informationBG, fg = "red")
         
-        colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font="FreeMono", padx = 5)
-        fantaLabel = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font="FreeMono", padx = 5)
+        colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        fantaLabel = tk.Label(self, text = "Fanta", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        nesteaLabel = tk.Label(self, text = "Nestea Peach", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        waterLabel = tk.Label(self, text = "Water", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        
+        if int(age) >= 18: #Alkohol
+            pilsnerLabel = tk.Label(self, text = "Tuborg Grøn", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+            classicLabel = tk.Label(self, text = "Tuborg Classic", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
+        else: pass
         
         self.colaregImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\CocaColaReg.png"))
         colaregCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
@@ -206,58 +227,129 @@ class Bip_Bar(page):
         spriteCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
         self.fantaImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\Fanta.png"))
         fantaCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        self.nesteaImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos/Nestea.png"))
+        nesteaCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        self.waterImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\Water.png"))
+        waterCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+        if int(age) >= 18: #Alkohol
+            self.pilsnerImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\TuborgGrøn.png"))
+            pilsnerCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
+            self.classicImage = PIL.ImageTk.PhotoImage(PIL.Image.open("MenuPhotos\TuborgClassic.png"))
+            classicCanvas = tk.Canvas(self, width = imageSize, height = imageSize)
         
-        colaRegBtnDown = tk.Button(self, text = "-")
-        colaRegAmountLabel = tk.Label(self, text = "0")
-        colaRegBtnUp = tk.Button(self, text = "+")
-        colaZeroBtnDown = tk.Button(self, text = "-")
-        colaZeroAmountLabel = tk.Label(self, text = "0")
-        colaZeroBtnUp = tk.Button(self, text = "+")
-        spriteBtnDown = tk.Button(self, text = "-")
-        spriteAmountLabel = tk.Label(self, text = "0")
-        spriteBtnUp = tk.Button(self, text = "+", )
-        fantaBtnDown = tk.Button(self, text = "-")
-        fantaAmountLabel = tk.Label(self, text = "0")
-        fantaBtnUp = tk.Button(self, text = "+")
+        self.minusImage = tk.PhotoImage(file='MenuPhotos/minusBtn.png')
+        self.plusImage = tk.PhotoImage(file='MenuPhotos/plusBtn.png')
+        
+        colaRegBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Cola_Reg"))
+        self.colaRegAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        colaRegBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Cola_Reg"))
+        colaZeroBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Cola_Zero"))
+        self.colaZeroAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        colaZeroBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Cola_Zero"))
+        spriteBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Sprite"))
+        self.spriteAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        spriteBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Sprite"))
+        fantaBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Fanta"))
+        self.fantaAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        fantaBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Fanta"))
+        nesteaBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Nestea"))
+        self.nesteaAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        nesteaBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Nestea"))
+        waterBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Water"))
+        self.waterAmountLabel = tk.Label(self, text = "0", font = informationFont)
+        waterBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Water"))
+        
+        if int(age) >= 18: #Alkohol
+            pilsnerBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Pilsner"))
+            self.pilsnerAmountLabel = tk.Label(self, text = "0", font = informationFont)
+            pilsnerBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Pilsner"))
+            classicBtnDown = tk.Button(self, image = self.minusImage, borderwidth=0, command=lambda: self.updateLabel("-", "Classic"))
+            self.classicAmountLabel = tk.Label(self, text = "0", font = informationFont)
+            classicBtnUp = tk.Button(self, image = self.plusImage, borderwidth=0, command=lambda: self.updateLabel("+", "Classic"))
         
               
         
         
         #Packing of GUI
-        birthdayLabel.grid(row = 0, column = 0, columnspan = 9, sticky = "N", pady = 5)
-        ageLabel.grid(row = 1, column = 0, columnspan = 9, sticky = "N", pady = 5)
-        balanceLabel.grid(row = 2, column = 0, columnspan = 9, sticky = "N", pady = 5)
+        infoBG.grid(row = 0, column = 0, columnspan = 12, rowspan = 3)
+        cancelTransactionBtn.grid(row = 0, column = 0, rowspan = 3, padx = 5)
+        createTransactionBtn.grid(row = 0, column = 1, rowspan = 3, padx = (5, 18))
+        totalAmountLabel.grid(row = 0, column = 2, columnspan = 3)
+        remainBalanceLabel.grid(row = 1, column = 2, columnspan = 3)
+        totalAmountValue.grid(row = 0, column = 5)
+        remainBalanceValue.grid(row = 1, column = 5)
+        ageLabel.grid(row = 0, column = 6, columnspan = 3, pady = 5)
+        balanceLabel.grid(row = 1, column = 6, columnspan = 3, pady = 5)
+        alcoholAllowedLabel.grid(row = 2, column = 6, columnspan = 3, pady = 5)
         canvas.grid(column = 9, row = 0 , rowspan = 3, columnspan = 3)
         
         colaregLabel.grid(row = 3, column = 0, columnspan = 3)
         colazeroLabel.grid(row = 3, column = 3, columnspan = 3)
         spriteLabel.grid(row = 3, column = 6, columnspan = 3)
         fantaLabel.grid(row = 3, column = 9, columnspan = 3)
+        nesteaLabel.grid(row = 7, column = 0, columnspan = 3)
+        waterLabel.grid(row = 7, column = 3, columnspan = 3)
+        
+        if int(age) >= 18: #Alkohol
+            pilsnerLabel.grid(row = 7, column = 6, columnspan = 3)
+            classicLabel.grid(row = 7, column = 9, columnspan = 3)
         
         colaregCanvas.grid(row = 4, column = 0, columnspan = 3)
         colazeroCanvas.grid(row = 4, column = 3, columnspan = 3)
         spriteCanvas.grid(row = 4, column = 6, columnspan = 3)
         fantaCanvas.grid(row = 4, column = 9, columnspan = 3)
+        nesteaCanvas.grid(row = 8, column = 0, columnspan = 3)
+        waterCanvas.grid(row = 8, column = 3, columnspan = 3)
         
-        colaRegBtnDown.grid(row = 5, column = 0)
-        colaRegAmountLabel.grid(row = 5, column = 1)
+        if int(age) >= 18: #Alkohol
+            pilsnerCanvas.grid(row = 8, column = 6, columnspan = 3)
+            classicCanvas.grid(row = 8, column = 9, columnspan = 3)
+        
+        
+        colaRegBtnDown.grid(row = 5, column = 0) #Første række starter her
+        self.colaRegAmountLabel.grid(row = 5, column = 1)
         colaRegBtnUp.grid(row = 5, column = 2)
         colaZeroBtnDown.grid(row = 5, column = 3)
-        colaZeroAmountLabel.grid(row = 5, column = 4)
+        self.colaZeroAmountLabel.grid(row = 5, column = 4)
         colaZeroBtnUp.grid(row = 5, column = 5)
         spriteBtnDown.grid(row = 5, column = 6)
-        spriteAmountLabel.grid(row = 5, column = 7)
+        self.spriteAmountLabel.grid(row = 5, column = 7)
         spriteBtnUp.grid(row = 5, column = 8)
         fantaBtnDown.grid(row = 5, column = 9)
-        fantaAmountLabel.grid(row = 5, column = 10)
+        self.fantaAmountLabel.grid(row = 5, column = 10)
         fantaBtnUp.grid(row = 5, column = 11)
+        
+        #Indsættelse af en frame til afstand
+        distanceFrame = tk.Frame(self)
+        spacing = tk.Label(distanceFrame, width = 120, height = 4)
+        distanceFrame.grid(row = 6, column = 0, columnspan = 12)
+        spacing.pack()
+        
+        nesteaBtnDown.grid(row = 9, column = 0) #Anden række starter her
+        self.nesteaAmountLabel.grid(row = 9, column = 1)
+        nesteaBtnUp.grid(row = 9, column = 2)
+        waterBtnDown.grid(row = 9, column = 3)
+        self.waterAmountLabel.grid(row = 9, column = 4)
+        waterBtnUp.grid(row = 9, column = 5)
+        
+        if int(age) >= 18: #Alkohol
+            pilsnerBtnDown.grid(row = 9, column = 6)
+            self.pilsnerAmountLabel.grid(row = 9, column = 7)
+            pilsnerBtnUp.grid(row = 9, column = 8)
+            classicBtnDown.grid(row = 9, column = 9)
+            self.classicAmountLabel.grid(row = 9, column = 10)
+            classicBtnUp.grid(row = 9, column = 11)
         
         colaregCanvas.create_image(2, 2, image = self.colaregImage, anchor = "nw")
         colazeroCanvas.create_image(2, 2, image = self.colazeroImage, anchor = "nw")
         spriteCanvas.create_image(2, 2, image = self.spriteImage, anchor = "nw")
         fantaCanvas.create_image(2, 2, image = self.fantaImage, anchor = "nw")
+        nesteaCanvas.create_image(2, 2, image = self.nesteaImage, anchor = "nw")
+        waterCanvas.create_image(2, 2, image = self.waterImage, anchor = "nw")
         
-        
+        if int(age) >= 18: #Alkohol
+            pilsnerCanvas.create_image(2, 2, image = self.pilsnerImage, anchor = "nw")
+            classicCanvas.create_image(2, 2, image = self.classicImage, anchor = "nw")
         
          
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
@@ -273,6 +365,36 @@ class Bip_Bar(page):
     def createTransaction(self):
         pass
     
+    def updateLabel(self, operation, item):
+        ops = {"+": (lambda x,y: x+y), "-": (lambda x,y: x-y)} #Used as ops["+"] (x,y) or ops["-"] (x,y)
+        
+        if item == "Cola_Reg":
+            self.colaRegAmountLabel.config(text = ops[operation] (int(self.colaRegAmountLabel.cget("text")), 1))
+            if int(self.colaRegAmountLabel.cget("text")) < 0: self.colaRegAmountLabel.config(text = "0")
+        elif item == "Cola_Zero":
+            self.colaZeroAmountLabel.config(text = ops[operation] (int(self.colaZeroAmountLabel.cget("text")), 1))
+            if int(self.colaZeroAmountLabel.cget("text")) < 0: self.colaZeroAmountLabel.config(text = "0")
+        elif item == "Sprite":
+            self.spriteAmountLabel.config(text = ops[operation] (int(self.spriteAmountLabel.cget("text")), 1))
+            if int(self.spriteAmountLabel.cget("text")) < 0: self.spriteAmountLabel.config(text = "0")
+        elif item == "Fanta":
+            self.fantaAmountLabel.config(text = ops[operation] (int(self.fantaAmountLabel.cget("text")), 1))  
+            if int(self.fantaAmountLabel.cget("text")) < 0: self.fantaAmountLabel.config(text = "0")
+        elif item == "Nestea":
+            self.nesteaAmountLabel.config(text = ops[operation] (int(self.nesteaAmountLabel.cget("text")), 1))
+            if int(self.nesteaAmountLabel.cget("text")) < 0: self.nesteaAmountLabel.config(text = "0")
+        elif item == "Classic":
+            self.classicAmountLabel.config(text = ops[operation] (int(self.classicAmountLabel.cget("text")), 1))
+            if int(self.classicAmountLabel.cget("text")) < 0: self.classicAmountLabel.config(text = "0")
+        elif item == "Pilsner":
+            self.pilsnerAmountLabel.config(text = ops[operation] (int(self.pilsnerAmountLabel.cget("text")), 1))
+            if int(self.pilsnerAmountLabel.cget("text")) < 0: self.pilsnerAmountLabel.config(text = "0")
+        elif item == "Water":
+            self.waterAmountLabel.config(text = ops[operation] (int(self.waterAmountLabel.cget("text")), 1))
+            if int(self.waterAmountLabel.cget("text")) < 0: self.waterAmountLabel.config(text = "0")
+        else: pass     
+            
+        
 class Edit_User(page):
     def __init__(self, *args, **kwargs):
         page.__init__(self, *args, **kwargs)
@@ -331,6 +453,7 @@ class Edit_User(page):
     def updateUser(self):
         pass
 
+
 class New_User(page):
     def __init__(self, *args, **kwargs):
         page.__init__(self, *args, **kwargs)
@@ -380,8 +503,7 @@ class New_User(page):
             
         #Send UserData and Image to Server
         serverComm.updateUser(userData, image_data)
-            
-        
+                   
 
 class NFC_Reader():
     def __init__(self):
@@ -474,6 +596,7 @@ class ServerCommunication():
         print("Making transaction request...")
         sio.emit("Trans", transInfo)
 
+
 if __name__ == "__main__":
     nfcReader = NFC_Reader()
     serverComm = ServerCommunication()
@@ -520,6 +643,3 @@ if __name__ == "__main__":
     
     
     base.mainloop() #TKINTER MAIN LOOP
-    
-
-
