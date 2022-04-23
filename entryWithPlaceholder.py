@@ -2,8 +2,8 @@
 import tkinter as tk
 
 class EntryWithPlaceholder(tk.Entry):
-    def __init__(self, master=None, placeholder="PLACEHOLDER", color='grey'):
-        super().__init__(master)
+    def __init__(self, master=None, placeholder="PLACEHOLDER", color='grey', width=20):
+        super().__init__(master, width = width)
 
         self.placeholder = placeholder
         self.placeholder_color = color
