@@ -258,6 +258,9 @@ class Bip_Bar(page):
         while userData == {}: #Await user data
             time.sleep(0.2)
         print("Data ready to be inserted!")
+        main.statusCanvas.delete("all")
+        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw")
+        main.statusMsg.config(text = "User data inserted")
         
         self.userData = userData #For using userdata in other functions
         
@@ -553,6 +556,7 @@ class Edit_User(page):
         self.liveView = False
         
     def getUser(self): #Private and public data
+        #Read NFC
         userID, chipID = nfcReader.readData()
         #print(data)
         self.btn_getUser.destroy()
@@ -574,7 +578,10 @@ class Edit_User(page):
         
         
         print("Data ready to be inserted!")
-        print(userData)
+        main.statusCanvas.delete("all")
+        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw")
+        main.statusMsg.config(text = "User data inserted")
+        
         #Inserting data i boxes
         self.navnInput.insert(0, userData["name"])
         self.emailInput.insert(0, userData["email"])
@@ -711,6 +718,7 @@ class NFC_Reader():
         print("Tag found!")
         print(tag)
         
+        
         chipID = tag.identifier.hex()
         try:
             if tag.ndef == None: #If tag is authenticated or carries no data.
@@ -731,6 +739,8 @@ class NFC_Reader():
         except:
             self.clf.close()
             return(None, None)
+        
+        
     
     
     def writeData(self, inputData):
