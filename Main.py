@@ -1,6 +1,4 @@
 import tkinter as tk # (pip install tkinter)
-import sys
-import os
 import entryWithPlaceholder #entryWithPlaceholder.py (local file)
 import cv2 #Camera stuff (pip install opencv)
 import PIL.Image, PIL.ImageTk #tkinter stuff with PIL (pip install Pillow)
@@ -54,10 +52,7 @@ class MainFrame(tk.Frame):
         
         statusLabel.grid(row = 5, column = 0, padx = 0, pady = (120, 0))
         self.statusCanvas.grid(row = 6, column = 0)
-        self.statusMsg.grid(row = 7, column = 0)
-        
-    
-        
+        self.statusMsg.grid(row = 7, column = 0)  
 
     
     def createWindows(self, windowsToCreate):
@@ -112,9 +107,7 @@ class MainFrame(tk.Frame):
             self.New_User_Button.configure(command = self.New_User_Window.show) 
             
             #Hvilken side programmet skal starte i
-            self.New_User_Window.show()
-
-        
+            self.New_User_Window.show()     
         
     
     def reset(self, windowsToReset):
@@ -207,7 +200,6 @@ class page(tk.Frame):
         
         #Start-image
         self.takeImage()
-        
         # ---------------------------------------------------------
         # CAMERA SETUP ENDs HERE
         # ---------------------------------------------------------
@@ -482,7 +474,9 @@ class Bip_Bar(page):
                 try: self.totalToPay -= int(self.insertMoneyEntry.get())
                 except: pass
         
-        if self.age >= 18: labels.append([self.pilsnerAmountLabel, 30]) and labels.append([self.classicAmountLabel, 30])
+        if self.age >= 18: 
+            labels.append([self.pilsnerAmountLabel, 30]) 
+            labels.append([self.classicAmountLabel, 30])
         
         for label in labels:
             self.totalToPay += int(label[0].cget("text"))*label[1] #Current total
@@ -538,10 +532,7 @@ class Bip_Bar(page):
         
         self.totalAmountValue.config(text = str(self.totalToPay))
         self.remainBalanceValue.config(text = str(self.remainBalance))
-    
-        
-        
-            
+              
         
 class Edit_User(page):
     def __init__(self, *args, **kwargs):
@@ -599,9 +590,7 @@ class Edit_User(page):
         self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
         editUserButton = tk.Button(self, text = "Opdatér bruger", command = lambda: self.updateUser(userID, userData["balance"], userData["transactions"]))
-        editUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)
-        
-        
+        editUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)       
             
     def updateUser(self, UserID, balance, transactions):
         global userData
@@ -676,7 +665,7 @@ class New_User(page):
                               "adress" : str(self.adresseInput.get()),
                               "birthday" : str(self.date.get()+'-'+self.month.get()+'-'+self.year.get()),
                               "chipID" : ID,
-                              "balance" : 0,
+                              "balance" : 100,
                               "transactions" : {}
                               }} 
         print(userData)
@@ -739,9 +728,7 @@ class NFC_Reader():
         except:
             self.clf.close()
             return(None, None)
-        
-        
-    
+         
     
     def writeData(self, inputData):
         #Check NFC-reader connection
