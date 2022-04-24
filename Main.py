@@ -8,6 +8,7 @@ import socketio # (pip install "python-socketio[client]")
 import time
 from datetime import date
 import shutil
+import winsound
 
 class MainFrame(tk.Frame): 
     def __init__(self, *args, **kwargs):
@@ -50,7 +51,7 @@ class MainFrame(tk.Frame):
         self.errorIcon = PIL.ImageTk.PhotoImage(PIL.Image.open("Icons\errorIcon.png"))
         self.waitIcon = PIL.ImageTk.PhotoImage(PIL.Image.open("Icons\waitIcon.png"))
         
-        statusLabel.grid(row = 5, column = 0, padx = 0, pady = (120, 0))
+        statusLabel.grid(row = 5, column = 0, padx = 0, pady = (200, 0))
         self.statusCanvas.grid(row = 6, column = 0)
         self.statusMsg.grid(row = 7, column = 0)  
 
@@ -589,7 +590,7 @@ class Edit_User(page):
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
         self.canvas1.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
         
-        editUserButton = tk.Button(self, text = "Opdatér bruger", command = lambda: self.updateUser(userID, userData["balance"], userData["transactions"]))
+        editUserButton = tk.Button(self, width = 30, height = 2, text = "Opdatér bruger og scan NFC", command = lambda: self.updateUser(userID, userData["balance"], userData["transactions"]))
         editUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)       
             
     def updateUser(self, UserID, balance, transactions):
@@ -645,10 +646,9 @@ class New_User(page):
         #Creates boxes for input
         self.userInfo(placeholder=True)
         
-        newUserButton = tk.Button(self, text = "Opret ny bruger", command = self.newUser)
+        newUserButton = tk.Button(self, width = 30, height = 2, text = "Opret ny bruger og scan NFC", command = self.newUser)
         newUserButton.grid(row = 2, column = 1, padx = 0, pady = 0)
-          
-        
+              
             
     def newUser(self): #Private and public data
         #GENERATION OF USERID
@@ -665,7 +665,7 @@ class New_User(page):
                               "adress" : str(self.adresseInput.get()),
                               "birthday" : str(self.date.get()+'-'+self.month.get()+'-'+self.year.get()),
                               "chipID" : ID,
-                              "balance" : 100,
+                              "balance" : 0,
                               "transactions" : {}
                               }} 
         print(userData)
@@ -718,6 +718,7 @@ class NFC_Reader():
                 userID = record.resource.uri #Gets the userID from the NFC-tag records
                 
                 self.clf.close()
+                winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
                 return(userID, chipID)
             
             else: 
@@ -753,6 +754,7 @@ class NFC_Reader():
         tag.protect(password = b"203ec79c-9288-4612-bac3-9e827d43c5d3", read_protect = True)
         
         self.clf.close()
+        winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
         
         return chipID
         
@@ -836,6 +838,7 @@ if __name__ == "__main__":
     def serverConfirmation(data):
         print(data)
         if data == "Transaction recieved!": main.reset("Bip_Bar")
+        elif data == "Transaction recieved,\n but balance does\n not match list\n of transactions!": main.reset("Bip_Bar")
         elif data == "User Updated!": main.reset("Edit_User")
         elif data == "New user created!": main.reset("New_User")
         else: main.reset("all")  #Reset windows
@@ -851,8 +854,7 @@ if __name__ == "__main__":
         global userData
         userData = {"failure" : "failure"} #To break wait loop in tkinter
         
-        if data == "Transaction recieved,\n but balance does\n not match list\n of transactions!": main.reset("Bip_Bar")
-        elif data == "Transaction failed\n for unknown reasons!": main.reset("Bip_Bar")
+        if data == "Transaction failed\n for unknown reasons!": main.reset("Bip_Bar")
         elif data == "FALSE CHIP-ID\n Public": main.reset("Bip_Bar")
         elif data == "FALSE USER-ID\n Public": main.reset("Bip_Bar")
         elif data == "FALSE CHIP-ID\n Private": main.reset("Edit_User")

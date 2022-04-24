@@ -107,7 +107,7 @@ def CreateTransaction(data):
         dbfile.close()
         
         if transAuthentication: emit("serverConfirmation", "Transaction recieved!")
-        else: emit("serverDenied", "Transaction recieved,\n but balance does\n not match list\n of transactions!")
+        else: emit("serverConfirmation", "Transaction recieved,\n but balance does\n not match list\n of transactions!")
     except Exception as e:
         print(e)
         emit("serverDenied", "Transaction failed\n for unknown reasons!")
