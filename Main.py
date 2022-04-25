@@ -1,6 +1,6 @@
 import tkinter as tk # (pip install tkinter)
 import entryWithPlaceholder #entryWithPlaceholder.py (local file)
-import cv2 #Camera stuff (pip install opencv)
+import cv2 #Camera stuff (pip install opencv-python)
 import PIL.Image, PIL.ImageTk #tkinter stuff with PIL (pip install Pillow)
 import uuid #Random uuid-generation
 import ndef # (pip install ndefpy)? - might be included in (pip install nfc)?
