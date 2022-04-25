@@ -112,24 +112,24 @@ class MainFrame(tk.Frame):
         
     
     def reset(self, windowsToReset):
-        if windowsToReset == "all":
+        if windowsToReset == "all": #Alle vinduer resettes
             self.Bip_Bar_Window.destroy()   
             self.Edit_User_Window.destroy()
             self.New_User_Window.destroy()
             
             self.createWindows("all")
             
-        elif windowsToReset == "Bip_Bar":
+        elif windowsToReset == "Bip_Bar": #Bip Bar-vindue resettes
             self.Bip_Bar_Window.destroy() 
             
             self.createWindows("Bip_Bar")
             
-        elif windowsToReset == "Edit_User":
+        elif windowsToReset == "Edit_User": #Edit User-vindue resettes
             self.Edit_User_Window.destroy() 
                 
             self.createWindows("Edit_User")
                 
-        elif windowsToReset == "New_User":
+        elif windowsToReset == "New_User": #New User-vindue resettes
             self.New_User_Window.destroy() 
                 
             self.createWindows("New_User")
@@ -142,7 +142,7 @@ class page(tk.Frame):
     def show(self):
         self.lift()
         
-    def userInfo(self, placeholder):
+    def userInfo(self, placeholder): #Skaber widgets til at inputte brugerdata
         navnText = tk.Label(self, text = "Fuldt navn")
         self.navnInput = tk.Entry(self)
 
@@ -152,7 +152,8 @@ class page(tk.Frame):
         adresseText = tk.Label(self, text = "Adresse")
         self.adresseInput = tk.Entry(self)
 
-        birthdayText = tk.Label(self, text = "Fødselsdato")     
+        birthdayText = tk.Label(self, text = "Fødselsdato")   
+          
         if placeholder == True:   
             self.date = entryWithPlaceholder.EntryWithPlaceholder(self, "dag")
             self.month = entryWithPlaceholder.EntryWithPlaceholder(self, "månedstal (01-12)")
@@ -185,7 +186,7 @@ class page(tk.Frame):
         self.btn_billede.grid(row = 12, column = 0, padx = 30, pady = 5)
         
         
-         # ---------------------------------------------------------
+        # ---------------------------------------------------------
         # CAMERA SETUP STARTS HERE
         # ---------------------------------------------------------
 
@@ -205,7 +206,7 @@ class page(tk.Frame):
         # CAMERA SETUP ENDs HERE
         # ---------------------------------------------------------
     
-    def toggleLiveView(self):
+    def toggleLiveView(self): #Om kamera har taget billede eller ej
         if self.liveView == False:
             self.liveView = True
             self.takeImage()
@@ -239,7 +240,7 @@ class Bip_Bar(page):
         self.btn_getUser.grid(row = 1, column = 0, padx = 30, pady = 5)
     
     def getUser(self): #Public data
-        self.userID, chipID = nfcReader.readData()
+        self.userID, chipID = nfcReader.readData() #Læser NFC-chip
         self.btn_getUser.destroy()
         self.text.destroy()
         
@@ -251,9 +252,9 @@ class Bip_Bar(page):
         while userData == {}: #Await user data
             time.sleep(0.2)
         print("Data ready to be inserted!")
-        main.statusCanvas.delete("all")
-        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw")
-        main.statusMsg.config(text = "User data inserted")
+        main.statusCanvas.delete("all") #Reset canvas
+        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw") #Server status succes
+        main.statusMsg.config(text = "User data inserted") #Server status message
         
         self.userData = userData #For using userdata in other functions
         
@@ -267,6 +268,7 @@ class Bip_Bar(page):
         todayList.reverse()
         self.age = int(todayList[2]) - int(birthdayList[2]) - ((int(todayList[1]), int(todayList[0])) < (int(birthdayList[1]), int(birthdayList[0])))
         
+        #Widget variables
         informationWidth = 28
         informationHeight = 1
         informationFont = ("FreeMono", 24, "bold")
@@ -275,7 +277,7 @@ class Bip_Bar(page):
         drinkFont = ("FreeMono", 20)
         imageSize = 200
         
-        #10 rows and 12 coloumns
+        #9 rows and 12 coloumns
         
         #Creation of GUI
         infoBG = tk.Frame(self, bg = informationBG, height = 12, width = 200, borderwidth=4, relief="ridge", pady=4)
@@ -295,6 +297,7 @@ class Bip_Bar(page):
         self.insertMoneyEntry = entryWithPlaceholder.EntryWithPlaceholder(infoBG, placeholder = "Add balance here (Whole number)", width = 40)
         self.updateInsert = tk.Button(infoBG, text = "Update", command = lambda: self.updateLabel("nothing", "nothing"))
         
+        #Labels
         colaregLabel = tk.Label(self, text = "Coca Cola Regular", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
         colazeroLabel = tk.Label(self, text = "Coca Cola Zero", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
         spriteLabel = tk.Label(self, text = "Sprite", width=drinkLabelWidth, font=drinkFont, padx = 5, pady = 10)
@@ -432,6 +435,7 @@ class Bip_Bar(page):
             self.classicAmountLabel.grid(row = 9, column = 10)
             classicBtnUp.grid(row = 9, column = 11)
         
+        #Indsæt billeder
         colaregCanvas.create_image(2, 2, image = self.colaregImage, anchor = "nw")
         colazeroCanvas.create_image(2, 2, image = self.colazeroImage, anchor = "nw")
         spriteCanvas.create_image(2, 2, image = self.spriteImage, anchor = "nw")
@@ -447,21 +451,21 @@ class Bip_Bar(page):
         self.photo = PIL.ImageTk.PhotoImage(PIL.Image.open(f"currentImage.jpg")) #Image to ImageTK object
         canvas.create_image(0,0, image = self.photo, anchor = tk.CENTER) #Show image on screen
     
-        
+        #Reset globale variable
         userData = {}
         userImage = None 
     
-    def createTransaction(self):
-        transEntry = {str(uuid.uuid1()) : -self.totalToPay}
+    def createTransaction(self): #Skaber transaktion
+        transEntry = {str(uuid.uuid1()) : -self.totalToPay} #Add balance
         newBalance = self.remainBalance
         
         print([self.userID, transEntry, newBalance])
-        serverComm.createTransaction([self.userID, transEntry, newBalance])
+        serverComm.createTransaction([self.userID, transEntry, newBalance]) #Send transaktion til server
         main.statusCanvas.delete("all")
         main.statusCanvas.create_image(2, 2, image = main.waitIcon, anchor = "nw")
-        main.statusMsg.config(text = "Please Wait...")
+        main.statusMsg.config(text = "Please Wait...") #Afvent svar - server status
     
-    def updateLabel(self, operation, item):
+    def updateLabel(self, operation, item): #Opdaterer labels
         ops = {"+": (lambda x,y: x+y), "-": (lambda x,y: x-y)} #Used as ops["+"] (x,y) or ops["-"] (x,y)
         
         #First evalutation
@@ -550,40 +554,40 @@ class Edit_User(page):
     def getUser(self): #Private and public data
         #Read NFC
         userID, chipID = nfcReader.readData()
-        #print(data)
         self.btn_getUser.destroy()
-        #data = ServerCommunication.getUser_private()
         
         #Creates boxes for input
         self.userInfo(placeholder=False)
         self.btn_billede.config(text="Nyt billede")
         
-        serverComm.getUser_private(userID, chipID)
+        serverComm.getUser_private(userID, chipID) #Get private user data from server
         
         print("Awaiting data...")
         
         global userData
         global userImage
         
-        while userData == {}:
+        while userData == {}: #Await userdata
             time.sleep(0.2)
         
         
         print("Data ready to be inserted!")
         main.statusCanvas.delete("all")
-        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw")
+        main.statusCanvas.create_image(2, 2, image = main.succesIcon, anchor = "nw") #Server status
         main.statusMsg.config(text = "User data inserted")
         
-        #Inserting data i boxes
+        #Inserting data in boxes
         self.navnInput.insert(0, userData["name"])
         self.emailInput.insert(0, userData["email"])
         self.adresseInput.insert(0, userData["adress"])
         
+        #Format birthday
         dateList = userData["birthday"].split("-")
         self.date.insert(0, dateList[0])
         self.month.insert(0, dateList[1])
         self.year.insert(0, dateList[2])    
         
+        #Save image to file
         with open(f"currentImage.jpg", "wb") as binary_file:
             binary_file.write(userImage) # Write bytes to file 
         
@@ -603,7 +607,6 @@ class Edit_User(page):
         except: shutil.copyfile("currentImage.jpg", f"IDPhotos/{UserID}.jpg")
         
         #Get userdata and format in order to send to server
-        #userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
         userData = {UserID : {"name" : str(self.navnInput.get()),
                               "email" : str(self.emailInput.get()),
                               "adress" : str(self.adresseInput.get()),
@@ -629,6 +632,7 @@ class Edit_User(page):
         main.statusCanvas.create_image(2, 2, image = main.waitIcon, anchor = "nw")
         main.statusMsg.config(text = "Please Wait...")
         
+        #Reset global variables
         userData = {}
         userImage = None
 
@@ -659,7 +663,6 @@ class New_User(page):
         cv2.imwrite(f"IDPhotos/{UserID}.jpg", self.frame) #Save image of user for identification
         
         #Get userdata and format in order to send to server
-        #userData = f"{str(UserID)}, {str(self.navnInput.get())}, {str(self.emailInput.get())}, {str(self.adresseInput.get())}, {str(self.date.get()+'-'+self.month.get()+'-'+self.year.get())}"
         userData = {UserID : {"name" : str(self.navnInput.get()),
                               "email" : str(self.emailInput.get()),
                               "adress" : str(self.adresseInput.get()),
@@ -718,7 +721,7 @@ class NFC_Reader():
                 userID = record.resource.uri #Gets the userID from the NFC-tag records
                 
                 self.clf.close()
-                winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
+                winsound.Beep(frequency=2000, duration=400) #Beep-sound
                 return(userID, chipID)
             
             else: 
@@ -754,7 +757,7 @@ class NFC_Reader():
         tag.protect(password = b"203ec79c-9288-4612-bac3-9e827d43c5d3", read_protect = True)
         
         self.clf.close()
-        winsound.Beep(frequency=2000, duration=400) #Beep-sound (Make this on the nfc-reader if possible)
+        winsound.Beep(frequency=2000, duration=400) #Beep-sound
         
         return chipID
         
@@ -868,13 +871,11 @@ if __name__ == "__main__":
         main.statusCanvas.delete("all")
         main.statusCanvas.create_image(2, 2, image = main.errorIcon, anchor = "nw")
         main.statusMsg.config(text = data)
-        
-        
-        
-        
+         
         
     #print("Connecting to server... please wait up to 60 seconds")
     #sio.connect('https://froemosen.pythonanywhere.com', wait_timeout = 60) #Connect to online server
+    
     
     sio.connect('http://127.0.0.1:5000/' ) #Connect to local server
     

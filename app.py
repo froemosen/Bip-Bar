@@ -1,60 +1,60 @@
-import os
 import pickle
-from tkinter import EXCEPTION
 from flask import Flask
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, emit
 
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-@app.route("/")
+@app.route("/") #Main hello world website (http)
 def hello_world():
     return "<h1>Hello, World!</h1>\n<h3>This is the Bip-Bar website running locally!</h3>"
 
-@socketio.on('PublicData') 
+@socketio.on('PublicData') #Socket public data request
 def SendDataPublic(data):
     print("I HAVE RECIEVED THE 'PublicData' REQUEST")
     dbfile = pickle.load(open( "dbbb", "rb"))
     try:    
-        user = (dbfile[data[0]])
+        user = (dbfile[data[0]]) #All user data from userID
         
+        #Slet unødvendig info
         user.pop("name")
         user.pop("email")
         user.pop("adress")
         
         print(user)
         
+        #Find billede til identifikation og load bytes
         with open(f'ServerPhotos/{data[0]}.jpg', 'rb') as f:
             image = f.read()
         
-        if user["chipID"] == data[1]:
+        if user["chipID"] == data[1]: #Tjek om ChipID stemmer overens med userID
             emit("recieveData", [user, image])  
         else: emit("serverDenied", "FALSE CHIP-ID\n Public")                
     
-    except: emit("serverDenied", "FALSE USER-ID\n Public")
+    except: emit("serverDenied", "FALSE USER-ID\n Public") #Hvis der ikke er en bruger med det UserID
     
 
-@socketio.on("PrivateData")
+@socketio.on("PrivateData") #Socket private data request
 def SendDataPrivate(data):
     print("I HAVE RECIEVED THE 'PrivateData' REQUEST")
-    dbfile = pickle.load(open( "dbbb", "rb"))
+    dbfile = pickle.load(open( "dbbb", "rb")) #load database
     try:
-        user = (dbfile[data[0]])
+        user = (dbfile[data[0]]) #All user data from userID
         print(user)
         
+        #Find billede til identifikation og load bytes
         with open(f'ServerPhotos/{data[0]}.jpg', 'rb') as f:
             image = f.read()
         
-        if user["chipID"] == data[1]:
+        if user["chipID"] == data[1]: #Tjek om ChipID stemmer overens med userID
             emit("recieveData", [user, image])
         else: emit("serverDenied", "FALSE CHIP-ID\n Private")
         
-    except: emit("serverDenied", "FALSE USER-ID\n Private")
+    except: emit("serverDenied", "FALSE USER-ID\n Private") #Hvis der ikke er en bruger med det UserID
 
-@socketio.on("NewUser")
+@socketio.on("NewUser") ##Socket new user request
 def NewUser(data):
-    # database
     print("New user is being created...")
     
     db = pickle.load(open("dbbb", "rb")) #Load database   
@@ -62,6 +62,7 @@ def NewUser(data):
     
     if list(dbUser.keys())[0] in db: userEdit = True #Check if user is already in database
     else: userEdit = False
+    
     try:
         db.update(dbUser) #update userData in database
         
@@ -78,14 +79,14 @@ def NewUser(data):
         if userEdit == False: emit("serverConfirmation", "New user failed!")
         elif userEdit == True: emit("serverConfirmation", "User update failed!")
 
-@socketio.on("Billede")
+@socketio.on("Billede") #Socket image request
 def Billede(data):
     with open(f"ServerPhotos/{data[0]}.jpg", "wb") as binary_file:
         binary_file.write(data[1]) # Write bytes to file
     
     
     
-@socketio.on("Trans")
+@socketio.on("Trans") #Socket transaction request
 def CreateTransaction(data):
     try:    
         db = pickle.load(open("dbbb", "rb")) #Load database   
